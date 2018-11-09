@@ -121,6 +121,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'hash_key' => env('HASH_KEY', 'tset'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
