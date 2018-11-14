@@ -36,7 +36,10 @@ class UsersTableSeeder extends Seeder
         ));
         DB::table('level')->insert(array(
             [
-            'name' => 'Administrator',
+            'name' => 'Super Admin',
+            ],
+            [
+            'name' => 'Admin',
             ],
             [
             'name' => 'Manager',

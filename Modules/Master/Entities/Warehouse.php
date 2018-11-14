@@ -1,9 +1,10 @@
 <?php
 
-namespace App;
+namespace Modules\Master\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Hashids\Hashids;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Warehouse extends Model
 {
@@ -38,12 +39,12 @@ class Warehouse extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User','user_id','id');
+        return $this->belongsTo('Modules\Master\Entities\User','user_id','id');
     }
 
     public function incharge()
     {
-        return $this->belongsTo('App\User','incharge','id');
+        return $this->belongsTo('Modules\Master\Entities\User','incharge','id');
     }
 
 

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Brand')
+@section('title', 'WApp|Brand')
 
 {{-- page level styles --}}
 @section('css')
@@ -84,7 +84,7 @@ var table = $('#brandtable').DataTable({
         {data: 0, width: '10px', orderable: false},{data: 1,  visible: false},{data: 2},{data: 3},
 				{data: 4, className: 'dt-center', orderable: false}
     ],
-        order: [1, 'desc'],
+        order: [0, 'desc'],
 });
 // Showing add product Form
 function editForm(id){

@@ -108,7 +108,13 @@ return [
     */
 
     'menu' => [
-        'MAIN NAVIGATION',
+        'MASTER DATA',
+        [
+            'text' => 'User',
+            'url'  => 'master/user',
+            'can'  => 'isAdmin',
+            'icon' => 'user',
+        ],
         [
             'text' => 'Brand',
             'url'  => 'master/brand',
@@ -133,7 +139,7 @@ return [
             'can'  => 'isAdmin',
             'icon' => 'home',
         ],
-        'ACCOUNT SETTINGS',
+        'APPLICATION',
         [
             'text' => 'Profile',
             'url'  => 'admin/settings',
@@ -182,19 +188,7 @@ return [
                 ],
             ],
         ],
-        'LABELS',
-        [
-            'text'       => 'Important',
-            'icon_color' => 'red',
-        ],
-        [
-            'text'       => 'Warning',
-            'icon_color' => 'yellow',
-        ],
-        [
-            'text'       => 'Information',
-            'icon_color' => 'aqua',
-        ],
+
     ],
 
     /*

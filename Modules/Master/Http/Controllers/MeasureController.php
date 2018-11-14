@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Hashids\Hashids;
-use Modules\Entities\Measure;
-use App\User;
+use Modules\Master\Entities\Measure;
+use Modules\Master\Entities\User;
 use DataTables;
 use Auth;
 use Gate;
@@ -25,7 +25,7 @@ class MeasureController extends Controller
           {
              return response()->view('error.404', [], 404);
           }
-          return view('master_data.measure');
+          return view('master::measure');
       }
 
       public function getMeasure()
@@ -34,22 +34,21 @@ class MeasureController extends Controller
           {
              return response()->view('error.404', [], 404);
           }
-          $company = Auth::user()->company_id;
-          $measure = Measure::where('company_id', $company)->get();
+          $measures = Measure::all();
           $hash = config('app.hash_key');
           $hashids = new Hashids($hash,20);
           $no = 0;
           $data = array();
-          foreach ($measure as $satuan) {
+          foreach ($measures as $measure) {
             $no ++;
             $row = array();
             $row[] = $no;
-            $row[] = $hashids->encode($satuan->id);
-            $row[] = $satuan->measure_name;
-            $row[] = $satuan->user->name;
-            $row[] = "<a href='#' onclick='editForm(\"".$hashids->encode($satuan->id)."\")'><i class='fa fa-pencil-square-o'></i></a>
+            $row[] = $hashids->encode($measure->id);
+            $row[] = $measure->name;
+            $row[] = $measure->user->name;
+            $row[] = "<a href='#' onclick='editForm(\"".$hashids->encode($measure->id)."\")'><i class='fa fa-pencil-square-o'></i></a>
                           &nbsp;&nbsp;&nbsp;
-                        <a href='#' onclick='deleteForm(\"".$hashids->encode($satuan->id)."\")' type='submit'><i class='fa fa-trash'></i></a>";
+                        <a href='#' onclick='deleteForm(\"".$hashids->encode($measure->id)."\")' type='submit'><i class='fa fa-trash'></i></a>";
             $data[] = $row;
           }
 
@@ -58,24 +57,16 @@ class MeasureController extends Controller
 
       public function measurestore(Request $request)
       {
-          $company_id = Auth::user()->company_id;
-          $pesan = [
-                    'required' => 'Kolom ini, harus diisi.',
-                    'unique' => 'Satuan ini, sudah ada.'
-                  ];
           $this->validate($request, [
-            'measure_name' => [
-                'required',
-                Rule::unique('lerp_measure')->where(function ($query) {
-                      $company_id = Auth::user()->company_id;
-                      return $query->where('company_id', $company_id);
-                  })
-            ],
-          ],$pesan);
-          $request->merge(['measure_name' => ucfirst($request->measure_name)]);
-          Measure::create($request->all()+['company_id'=>$company_id]+['user_id' => Auth::user()->id]);
-          flash()->success('Success', 'Satuan Baru Sudah Di Input');
-          return redirect('measure');
+            'name' => 'required|unique:measure',
+          ]);
+          $data=[
+            'name' => ucfirst($request->name),
+            'user_id' => Auth::user()->id
+          ];
+          Measure::create($data);
+          flash()->success('Success', 'New Measure Added');
+          return redirect('master/measure');
       }
 
       public function measureedit($id)
@@ -92,23 +83,20 @@ class MeasureController extends Controller
           $hash = config('app.hash_key');
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
-          $pesan = [
-                    'required' => 'Kolom ini, harus diisi.',
-                    'unique' => 'Satuan ini, sudah ada.'
-                  ];
           $this->validate($request, [
-            'measure_name' => [
-                'required',
-                Rule::unique('lerp_measure')->where(function ($query) {
-                      $company = Auth::user()->company_id;
-                      return $query->where('company_id', $company);
-                  })
-            ],
-          ],$pesan);
-          $request->merge(['measure_name' => ucfirst($request->measure_name)]);
-          Measure::find($ids)->update($request->all());
-          flash()->success('Success', 'Satuan Sudah Di Update');
-          return redirect('measure');
+            'name' => ['required',
+                        Rule::unique('measure')->ignore($ids),
+                      ]
+          ]);
+
+          $data=[
+            'name' => ucfirst($request->name),
+            'user_id' => Auth::user()->id
+          ];
+
+          Measure::find($ids)->update($data);
+          flash()->success('Success', 'Measure Updated');
+          return redirect('master/measure');
       }
 
       public function measuredelete($id)
@@ -117,6 +105,7 @@ class MeasureController extends Controller
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
           Measure::destroy($ids);
-          return redirect('measure');
+          flash()->success('Success', 'Measure Deleted');
+          return redirect('master/measure');
       }
 }

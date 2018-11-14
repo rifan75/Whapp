@@ -123,6 +123,8 @@ return [
 
     'hash_key' => env('HASH_KEY', 'tset'),
 
+    'url_images' => env('URL_IMAGES', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

@@ -5,8 +5,10 @@ namespace Modules\Master\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
-use Modules\Entities\Supplier;
-use App\User;
+use Modules\Master\Entities\Supplier;
+use Modules\Master\Entities\Country;
+use Hashids\Hashids;
+use Modules\Master\Entities\User;
 use DataTables;
 use Auth;
 
@@ -19,36 +21,34 @@ class SupplierController extends Controller
 
       public function index()
       {
-          $linkgeneral = config('app.general_link');
-          $province = json_decode(file_get_contents($linkgeneral.'/provinsi'));
-          return view('master_data.supplier',compact('province'));
+
+          $countries=Country::all();
+          return view('master::supplier',compact('countries'));
       }
 
       public function getSupplier()
       {
-          $company = Auth::user()->company_id;
-          $supplier = Supplier::where('company_id', $company)->get();
-          $province = json_decode(file_get_contents('http://inddata.test/allprovinsi'),true);
-          $city = json_decode(file_get_contents('http://inddata.test/allkota'),true);
-          $kecamatan = json_decode(file_get_contents('http://inddata.test/allcamat/'),true);
+          $suppliers = Supplier::all();
+          $hash = config('app.hash_key');
+          $hashids = new Hashids($hash,20);
           $no = 0;
           $data = array();
-          foreach ($supplier as $pemasok) {
+          foreach ($suppliers as $supplier) {
             $no ++;
             $row = array();
             $row[] = $no;
-            $row[] = $pemasok->id;
-            $row[] = $pemasok->supplier_name;
-            $row[] = $pemasok->supplier_address.' '.$kecamatan[$pemasok->supplier_camat].' '.$city[$pemasok->supplier_kabkota]['tipe'].' '.$city[$pemasok->supplier_kabkota]['nama'].
-            '<br>'.$province[$pemasok->supplier_provinsi].'-'.$pemasok->kodepos;
-            $row[] = $pemasok->supplier_phone;
-            $row[] = $pemasok->supplier_email;
-            $row[] = $pemasok->contact_person;
-            $row[] = $pemasok->user->name;
-            $row[] = $pemasok->note;
-            $row[] = "<a href='#' onclick='editForm(".$pemasok->id.")'><i class='fa fa-pencil-square-o' title='edit'></i></a>
+            $row[] = $hashids->encode($supplier->id);
+            $row[] = $supplier->name;
+            $row[] = $supplier->address.' '.$supplier->city.' '.$supplier->state.
+            '<br>'.$supplier->country.'-'.$supplier->pos_code.
+            '<br> Email : '.$supplier->email.
+            '<br> Phone : '.$supplier->phone.
+            '<br> Contact Person : '.$supplier->contact_person;
+            $row[] = $supplier->user->name;
+            $row[] = $supplier->note;
+            $row[] = "<a href='#' onclick='editForm(\"".$hashids->encode($supplier->id)."\")'><i class='fa fa-pencil-square-o' title='edit'></i></a>
                         &nbsp;
-                      <a href='#' onclick='deleteForm(".$pemasok->id.")' type='submit'><i class='fa fa-trash' title='hapus'></i></a>";
+                      <a href='#' onclick='deleteForm(\"".$hashids->encode($supplier->id)."\")' type='submit'><i class='fa fa-trash' title='hapus'></i></a>";
             $data[] = $row;
           }
 
@@ -58,58 +58,88 @@ class SupplierController extends Controller
       public function supplierstore(Request $request)
       {
           $this->validate($request, [
-            'supplier_name' => [
-                'required',
-                Rule::unique('lerp_supplier')->where(function ($query) {
-                      $company = Auth::user()->company_id;
-                      return $query->where('company_id', $company);
-                  })
-            ],
+            'name' => 'required|unique:supplier',
+            'address'=> 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'country' => 'required',
+            'pos_code' => 'required|numeric',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'contact_person' => 'required',
           ]);
-          $request->merge(['supplier_name' => ucfirst($request->supplier_name)]);
-          Supplier::create($request->all()+ ['user_id' => Auth::user()->id]+ ['company_id' => Auth::user()->company_id]);
-          flash()->success('Success', 'Supplier Baru Sudah Di Input');
-          return redirect('supplier');
+          $data=[
+            'name' => ucfirst($request->name),
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'pos_code' => $request->pos_code,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'contact_person' => $request->contact_person,
+            'note' => $request->note,
+            'user_id' => Auth::user()->id
+          ];
+          Supplier::create($data);
+          flash()->success('Success', 'New Supplier Added');
+          return redirect('master/supplier');
       }
 
       public function supplieredit($id)
       {
-          $supplier=Supplier::find($id);
+          $hash = config('app.hash_key');
+          $hashids = new Hashids($hash,20);
+          $ids=$hashids->decode($id)[0];
+          $supplier=Supplier::find($ids);
           echo json_encode($supplier);
       }
 
       public function supplierupdate(Request $request, $id)
       {
-          $pesan = [
-                    'required' => 'Kolom ini, harus diisi.',
-                    'unique' => 'Supplier ini, sudah ada.'
-                  ];
+          $hash = config('app.hash_key');
+          $hashids = new Hashids($hash,20);
+          $ids=$hashids->decode($id)[0];
+
           $this->validate($request, [
-            'supplier_name' => [
-                'required',
-                Rule::unique('lerp_supplier')->where(function ($query) {
-                      $company = Auth::user()->company_id;
-                      $user_id = User::where('company_id', $company)->pluck('id');
-                      return $query->whereIn('user_id', $user_id);
-                  })->ignore($request->id),
-            ],
-          ],$pesan);
-          $request->merge(['supplier_name' => ucfirst($request->supplier_name)]);
-          Supplier::find($id)->update($request->all()+ ['user_id' => Auth::user()->id]);
-          flash()->success('Success', 'Supplier Sudah Di Update');
-          return redirect('supplier');
+            'name' => ['required',
+                        Rule::unique('supplier')->ignore($ids),
+                      ],
+            'address'=> 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'country' => 'required',
+            'pos_code' => 'required|numeric',
+            'phone' => 'required',
+            'email' => 'required|email',
+            'contact_person' => 'required',
+          ]);
+          $data=[
+            'name' => ucfirst($request->name),
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'country' => $request->country,
+            'pos_code' => $request->pos_code,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'contact_person' => $request->contact_person,
+            'note' => $request->note,
+            'user_id' => Auth::user()->id
+          ];
+          Supplier::find($ids)->update($data);
+          flash()->success('Success', 'Supplier Updated');
+          return redirect('master/supplier');
       }
 
       public function supplierdelete($id)
       {
-          Supplier::destroy($id);
-          return redirect('supplier');
-      }
+          $hash = config('app.hash_key');
+          $hashids = new Hashids($hash,20);
+          $ids=$hashids->decode($id)[0];
 
-      public function supplierapi()
-      {
-        	$supplier = Supplier::all();
-        	return $supplier;
+          Supplier::destroy($ids);
+          flash()->success('Success', 'Supplier Deleted');
+          return redirect('master/supplier');
       }
-
 }

@@ -17,8 +17,9 @@ class CreateSupplierTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('address')->nullable();
-            $table->integer('city')->nullable();
-            $table->integer('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
             $table->string('pos_code')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();

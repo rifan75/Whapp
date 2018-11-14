@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Hashids\Hashids;
 use Modules\Master\Entities\Brand;
-use App\User;
+use Modules\Master\Entities\User;
 use DataTables;
 use Auth;
 use Gate;

@@ -1,0 +1,40 @@
+
+
+ td.details-control {
+      background: url("../images/details_open.png") no-repeat center center;
+      cursor: pointer;
+
+  }
+  tr.shown td.details-control {
+      background: url("../images/details_close.png") no-repeat center center;
+  }
+
+
+  table.dataTable tbody td {
+    vertical-align: middle;
+  }
+
+  .table > thead > tr > th {
+
+    vertical-align: middle;
+  }
+  a.dt-button.green {
+         background-color: green;
+     }
+ .media-body {
+   padding-left: 10px;
+ }
+ .media {
+   margin-top: 40px !important;
+   margin-bottom: 40px;
+ }
+ .media .media-left i {
+   margin-right: 10px;
+ }
+
+ .swal2-popup {
+   font-size: 1.6rem !important;
+ }
+ .big-icon {
+     font-size: 72px;
+ }

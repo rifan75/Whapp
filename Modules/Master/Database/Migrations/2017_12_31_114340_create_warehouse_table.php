@@ -18,8 +18,9 @@ class CreateWarehouseTable extends Migration
           $table->string('name');
           $table->string('code');
           $table->string('address')->nullable();
-          $table->integer('city')->nullable();
-          $table->integer('state')->nullable();
+          $table->string('city')->nullable();
+          $table->string('state')->nullable();
+          $table->string('country')->nullable();
           $table->string('pos_code')->nullable();
           $table->string('phone')->nullable();
           $table->string('email')->nullable();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Modules\User\Entities;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,6 +29,6 @@ class Profile extends Authenticatable
 
     public function user()
     {
-        return $this->belongsTo('App\User','user_id','id');
+        return $this->belongsTo('Modules\User\Entities\User','user_id','id');
     }
 }

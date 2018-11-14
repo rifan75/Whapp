@@ -5,8 +5,8 @@ namespace Modules\Master\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
-use App\User;
-use Modules\Entities\Profile;
+use Modules\Master\Entities\User;
+use Modules\Master\Entities\Profile;
 use DataTables;
 use Auth;
 
