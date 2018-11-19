@@ -40,6 +40,6 @@ class Supplier extends Model
 
     public function user()
     {
-        return $this->belongsTo('Modules\Master\Entities\User','user_id','id');
+        return $this->belongsTo('Modules\User\Entities\User','user_id','id');
     }
 }

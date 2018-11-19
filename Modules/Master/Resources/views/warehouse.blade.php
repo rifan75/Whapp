@@ -77,8 +77,8 @@
 										<label for="country">Country</label>
 										<select name="country" id="country" class="form-control">
 											@foreach($countries as $country)
-											<option value="{{ $country->value }}" id="{{$country->value}}">
-											{{ $country->value }}
+											<option value="{{ $country->name }}" id="{{$country->name}}">
+											{{ $country->name }}
 											</option>
 											@endforeach
 										</select>
@@ -100,7 +100,13 @@
 		              </div>
 									<div class="form-group col-md-12">
 		              	<label for="incharge" class=" control-label">Incharge : </label>
-		              	<input id="incharge" type="text" class="form-control" name="incharge" value="{{ old('incharge') }}">
+										<select name="incharge" id="incharge" class="form-control">
+											@foreach($users as $user)
+											<option value="{{ $user->hashid }}" id="{{$user->hashid}}">
+											{{ $user->name }}
+											</option>
+											@endforeach
+										</select>
 		                <p style="color:red">{{ $errors->first('incharge') }}</p>
 		              </div>
 									<div class="form-group col-md-12">
@@ -157,9 +163,9 @@ function editForm(id){
 				$('#pos_code').val(data.pos_code);
 				$('#phone').val(data.phone);
 				$('#email').val(data.email);
-				$('#contact_person').val(data.contact_person);
+				$('#incharge').val(data.hashincharge);
 				$('#note').val(data.note);
-        $('#warehouseform').attr('action', 'Warehouse/'+id);
+        $('#warehouseform').attr('action', '/master/warehouse/'+id);
       },
       error : function() {
         swal("Error","Cannot Show Record !","error");

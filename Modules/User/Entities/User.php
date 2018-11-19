@@ -1,15 +1,18 @@
 <?php
 
-namespace Modules\Master\Entities;
+namespace Modules\User\Entities;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Hashids\Hashids;
+
 class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $appends = ['hashid'];
     /**
      * The attributes that are mass assignable.
      *
@@ -28,13 +31,20 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function getHashidAttribute()
+    {
+        $hash = config('app.hash_key');
+        $hashids = new Hashids($hash,20);
+        return $hashids->encode($this->attributes['id']);
+    }
+
     public function levelin()
     {
-        return $this->belongsTo('Modules\Master\Entities\Level','level','id');
+        return $this->belongsTo('Modules\User\Entities\Level','level','id');
     }
 
     public function profile()
     {
-        return $this->hasOne('Modules\Master\Entities\Profile');
+        return $this->hasOne('Modules\User\Entities\Profile');
     }
 }

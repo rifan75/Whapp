@@ -17,14 +17,18 @@ class CreateUserDetailTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->string('department')->nullable();
             $table->string('hire_date')->nullable();
             $table->string('birth_date')->nullable();
             $table->string('gender')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
+            $table->string('country')->nullable();
             $table->string('pos_code')->nullable();
             $table->string('phone')->nullable();
+            $table->integer('recorder')->unsigned();
+            $table->foreign('recorder')->references('id')->on('users')->onDelete('restrict');
             $table->softDeletes();
             $table->timestamps();
         });

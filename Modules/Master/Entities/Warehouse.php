@@ -8,8 +8,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Warehouse extends Model
 {
-    protected $table = "warehouse";
+    use SoftDeletes;
 
+    protected $table = "warehouse";
+    protected $appends = ['hashincharge'];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +31,7 @@ class Warehouse extends Model
         'address',
         'city',
         'state',
+        'country',
         'pos_code',
         'phone',
         'email',
@@ -39,12 +50,12 @@ class Warehouse extends Model
 
     public function user()
     {
-        return $this->belongsTo('Modules\Master\Entities\User','user_id','id');
+        return $this->belongsTo('Modules\User\Entities\User','user_id','id');
     }
 
-    public function incharge()
+    public function inchargedata()
     {
-        return $this->belongsTo('Modules\Master\Entities\User','incharge','id');
+        return $this->belongsTo('Modules\User\Entities\User','incharge','id');
     }
 
 

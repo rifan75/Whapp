@@ -5,6 +5,7 @@ namespace Modules\User\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 use Modules\User\Entities\User;
 use Hashids\Hashids;
@@ -101,8 +102,9 @@ class UserController extends Controller
           $old_picture=User::where('id',$ids)->first();
           $old_picture_path=$old_picture->picture_path;
 
+
           if ($request->hasFile('picture_path')) {
-            if($old_picture_path=='users/images/picture.jpg' or $old_picture_path= null){
+            if($old_picture_path=='users/images/picture.jpg' or $old_picture_path== null){
                 $name = str_random(11)."_".$request->file('picture_path')->getClientOriginalName();
                 Storage::disk('local')->putFileAs('users/images', $request->file('picture_path'),$name);
                 $path = 'users/images/'.$name;
@@ -118,7 +120,7 @@ class UserController extends Controller
 
           User::find($ids)->update($user + ['picture_path' => $path]);
           flash()->success('Success', 'User is Updated');
-          return redirect('master/user');
+          return redirect('user');
       }
 
       public function useractupdate($id,$act)
@@ -151,7 +153,7 @@ class UserController extends Controller
           $hash = config('app.hash_key');
           $hashids = new Hashids($hash,20);
           $user_id = $hashids->encode(Auth::user()->id);
-          return view('hrm.changepass',compact('user_id'));
+          return view('user::changepass',compact('user_id'));
       }
 
       public function updatepasswd(Request $request,$id)

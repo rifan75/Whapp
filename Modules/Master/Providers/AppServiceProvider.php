@@ -25,7 +25,17 @@ class AppServiceProvider extends ServiceProvider
                   'icon' => 'home',
                   'submenu' => [
                                   [
-                                    'text' => 'Admin',
+                                    'text' => 'Local Inventory',
+                                    'url'  => 'admin/db-admin',
+                                    'icon' => 'user',
+                                  ],
+                                  [
+                                    'text' => 'Sending Stock',
+                                    'url'  => 'admin/db-admin',
+                                    'icon' => 'user',
+                                  ],
+                                  [
+                                    'text' => 'Accept Stock',
                                     'url'  => 'admin/db-admin',
                                     'icon' => 'user',
                                   ]

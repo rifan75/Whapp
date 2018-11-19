@@ -12,21 +12,7 @@
 */
 
 Route::prefix('master')->group(function() {
-
-    /**
-     * Registration Routes
-     */
-    Route::get('user', 'Auth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('register', 'Auth\RegisterController@register');
-
-    /**
-     * User Routes
-     */
-    Route::get('/getuser', 'UserController@getUser');
-    Route::get('/user/{id}/edit', 'UserController@useredit');
-    Route::patch('/useract/{id}/{act}', 'UserController@useractupdate');
-    Route::patch('/user/{id}', 'UserController@userupdate');
-    Route::delete('/user/{id}', 'UserController@userdelete');
+    Route::get('/home', 'HomeController@index')->name('home');
 
     /**
      * Brand Routes
@@ -68,21 +54,3 @@ Route::prefix('master')->group(function() {
     Route::patch('/warehouse/{id}', 'WarehouseController@warehouseupdate');
     Route::delete('/warehouse/{id}', 'WarehouseController@warehousedelete');
 });
-
-// Authentication Routes...
-Route::get('/', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-
-
-
-// Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
-
-// Email Verification Routes...
-Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
-Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
-Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');

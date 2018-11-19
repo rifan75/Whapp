@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Master\Http\Controllers\Auth;
+namespace Modules\User\Http\Controllers\Auth;
 
-use Modules\Master\Http\Controllers\Controller;
+use Modules\User\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Storage;
 
-use Modules\Master\Entities\User;
-use Modules\Master\Entities\Level;
+use Modules\User\Entities\User;
+use Modules\User\Entities\Level;
 use Hashids\Hashids;
 use Auth;
 use Gate;
@@ -35,7 +35,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/master/user';
+    protected $redirectTo = '/User/user';
 
     /**
      * Create a new controller instance.
@@ -54,7 +54,7 @@ class RegisterController extends Controller
             return response()->view('error.404', [], 404);
          }
          $levels=Level::all();
-         return view('master::user',compact('levels'));
+         return view('user::user',compact('levels'));
      }
      /**
       * Get a validator for an incoming registration request.

@@ -85,7 +85,7 @@ return [
     |
     */
 
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'master/home',
 
     'logout_url' => 'logout',
 
@@ -111,9 +111,20 @@ return [
         'MASTER DATA',
         [
             'text' => 'User',
-            'url'  => 'master/user',
-            'can'  => 'isAdmin',
             'icon' => 'user',
+            'can'  => 'isAdmin',
+            'submenu' => [
+                [
+                    'text' => 'List & Add User',
+                    'icon' => 'caret-right',
+                    'url'  => 'user/register',
+                ],
+                [
+                    'text' => 'Edit Profile',
+                    'icon' => 'caret-right',
+                    'url'  => 'user/profileedit',
+                ],
+            ],
         ],
         [
             'text' => 'Brand',
@@ -130,7 +141,6 @@ return [
         [
             'text' => 'Supplier',
             'url'  => 'master/supplier',
-            'can'  => 'isAdmin',
             'icon' => 'user',
         ],
         [
@@ -142,52 +152,41 @@ return [
         'APPLICATION',
         [
             'text' => 'Profile',
-            'url'  => 'admin/settings',
             'icon' => 'user',
+            'submenu' => [
+                [
+                    'text' => 'Show Profile',
+                    'icon' => 'caret-right',
+                    'url'  => 'user/profile',
+                ],
+                [
+                    'text' => 'Change Password',
+                    'icon' => 'caret-right',
+                    'url'  => 'user/changepasswd',
+                ],
+            ],
         ],
         [
-            'text' => 'Change Password',
+            'text' => 'Product',
             'url'  => 'admin/settings',
             'icon' => 'lock',
         ],
         [
-            'text'    => 'Multilevel',
-            'icon'    => 'share',
-            'submenu' => [
-                [
-                    'text' => 'Level One',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'Level One',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'Level Two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'Level Two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'Level Three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'Level One',
-                    'url'  => '#',
-                ],
-            ],
+            'text' => 'Global Inventory',
+            'url'  => 'admin/settings',
+            'icon' => 'lock',
         ],
+        [
+            'text' => 'Beginning Balance',
+            'url'  => 'admin/settings',
+            'icon' => 'lock',
+        ],
+        [
+            'text' => 'Stock Opname',
+            'url'  => 'admin/settings',
+            'icon' => 'lock',
+        ],
+
 
     ],
 

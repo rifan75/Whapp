@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Master\Entities\Supplier;
 use Modules\Master\Entities\Country;
 use Hashids\Hashids;
-use Modules\Master\Entities\User;
+use Modules\User\Entities\User;
 use DataTables;
 use Auth;
 

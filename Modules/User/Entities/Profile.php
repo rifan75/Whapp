@@ -17,18 +17,26 @@ class Profile extends Authenticatable
      */
     protected $fillable = [
         'user_id',
+        'department',
         'hire_date',
         'birth_date',
         'gender',
         'address',
         'city',
         'state',
+        'country',
         'phone',
-        'pos_code'
+        'pos_code',
+        'recorder'
     ];
 
     public function user()
     {
         return $this->belongsTo('Modules\User\Entities\User','user_id','id');
+    }
+
+    public function recorderdata()
+    {
+        return $this->belongsTo('Modules\User\Entities\User','recorder','id');
     }
 }

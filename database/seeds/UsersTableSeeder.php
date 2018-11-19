@@ -24,6 +24,7 @@ class UsersTableSeeder extends Seeder
         DB::table('user_detail')->insert(array(
             [
             'user_id' => 1,
+            'recorder' => 1,
             ]
         ));
         DB::table('warehouse')->insert(array(
