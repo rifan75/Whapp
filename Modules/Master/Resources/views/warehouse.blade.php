@@ -144,7 +144,7 @@ var table = $('#warehousetable').DataTable({
     ],
         order: [0, 'desc'],
 });
-// Showing add product Form
+
 function editForm(id){
     $('#inputhidden').val('PATCH');
     $('#warehouseform')[0].reset();
@@ -163,7 +163,7 @@ function editForm(id){
 				$('#pos_code').val(data.pos_code);
 				$('#phone').val(data.phone);
 				$('#email').val(data.email);
-				$('#incharge').val(data.hashincharge);
+				$('#incharge').val(data.incharge);
 				$('#note').val(data.note);
         $('#warehouseform').attr('action', '/master/warehouse/'+id);
       },
@@ -172,7 +172,7 @@ function editForm(id){
       },
     });
   }
-//Menghapud data
+
   function deleteForm(id) {
     swal({
       title: 'Are, You Sure ?',

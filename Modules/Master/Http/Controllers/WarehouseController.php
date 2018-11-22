@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Master\Entities\Warehouse;
 use Modules\Master\Entities\Country;
 use Hashids\Hashids;
-use Modules\User\Entities\User;
+use Modules\Master\Entities\User;
 use DataTables;
 use Auth;
 use Gate;
@@ -116,7 +116,23 @@ class WarehouseController extends Controller
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
           $warehouse=Warehouse::find($ids);
-          echo json_encode($warehouse);
+
+          $data = [
+            'code' => $warehouse->code,
+            'name' => $warehouse->name,
+            'address' => $warehouse->address,
+            'city' => $warehouse->city,
+            'state' => $warehouse->state,
+            'country' => $warehouse->country,
+            'pos_code' => $warehouse->pos_code,
+            'phone' => $warehouse->phone,
+            'email' => $warehouse->email,
+            'incharge' => $warehouse->hashincharge,
+            'note' => $warehouse->note,
+            'active' => $warehouse->active,
+          ];
+
+          echo json_encode($data);
       }
 
       public function warehouseupdate(Request $request, $id)
@@ -154,6 +170,7 @@ class WarehouseController extends Controller
             'note' => $request->note,
             'user_id' => Auth::user()->id
           ];
+
           Warehouse::find($ids)->update($data);
           flash()->success('Success', 'warehouse is Updated');
           return redirect('master/warehouse');

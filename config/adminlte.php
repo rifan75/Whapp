@@ -168,18 +168,45 @@ return [
         ],
         [
             'text' => 'Product',
-            'url'  => 'admin/settings',
             'icon' => 'lock',
+            'submenu' => [
+                [
+                    'text' => 'Product List',
+                    'icon' => 'caret-right',
+                    'url'  => 'product',
+                ],
+                [
+                    'text' => 'Manual Input',
+                    'icon' => 'caret-right',
+                    'url'  => 'product/manual',
+                ],
+                [
+                    'text' => 'Product Image',
+                    'icon' => 'caret-right',
+                    'url'  => 'product/image',
+                ],
+            ],
         ],
         [
-            'text' => 'Global Inventory',
-            'url'  => 'admin/settings',
+            'text' => 'Purchase',
             'icon' => 'lock',
-        ],
-        [
-            'text' => 'Beginning Balance',
-            'url'  => 'admin/settings',
-            'icon' => 'lock',
+            'submenu' => [
+                [
+                    'text' => 'Purchase List',
+                    'icon' => 'caret-right',
+                    'url'  => 'purchase',
+                ],
+                [
+                    'text' => 'Purchase Order',
+                    'icon' => 'caret-right',
+                    'url'  => 'purchase/order',
+                ],
+                [
+                    'text' => 'Supplier',
+                    'icon' => 'caret-right',
+                    'url'  => 'purchase/supplier',
+                ],
+            ],
         ],
         [
             'text' => 'Stock Opname',

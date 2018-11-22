@@ -247,20 +247,14 @@ $('#profiletable tbody').on( 'click', '#clicktabel', function () {
 		$('#formeditprofile').attr('action', '/user/profile/'+id+'/edit');
 } );
 
-		$('#buttoncancel').on('click', function(e) {
-				e.preventDefault();
-				location.reload();
-				return false;
-		});
-		$(function () {
-		        $('#hire_date').datetimepicker({
-		          format: 'DD-MMMM-YYYY'
-		        });
-						$('#birth_date').datetimepicker({
-		          format: 'DD-MMMM-YYYY'
-		        });
-
-		    });
+$(function () {
+        $('#hire_date').datetimepicker({
+          format: 'DD-MMMM-YYYY'
+        });
+				$('#birth_date').datetimepicker({
+          format: 'DD-MMMM-YYYY'
+        });
+});
 
 
 </script>

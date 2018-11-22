@@ -2,11 +2,9 @@
 
 namespace Modules\User\Entities;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class Level extends Authenticatable
+class Level extends Model
 {
-    use Notifiable;
    	protected $table = "level";
 }

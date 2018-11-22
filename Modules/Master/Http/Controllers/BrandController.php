@@ -75,7 +75,11 @@ class BrandController extends Controller
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
           $brand=Brand::find($ids);
-          echo json_encode($brand);
+
+          $data = [
+              'name' => $brand->name,
+          ];
+          echo json_encode($data);
       }
 
       public function brandupdate(Request $request, $id)

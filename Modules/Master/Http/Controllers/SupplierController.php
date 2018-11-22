@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Master\Entities\Supplier;
 use Modules\Master\Entities\Country;
 use Hashids\Hashids;
-use Modules\User\Entities\User;
+use Modules\Master\Entities\User;
 use DataTables;
 use Auth;
 
@@ -92,7 +92,22 @@ class SupplierController extends Controller
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
           $supplier=Supplier::find($ids);
-          echo json_encode($supplier);
+
+          $data = [
+            'name' => $supplier->name,
+            'address' => $supplier->address,
+            'city' => $supplier->city,
+            'state' => $supplier->state,
+            'country' => $supplier->country,
+            'pos_code' => $supplier->pos_code,
+            'phone' => $supplier->phone,
+            'email' => $supplier->email,
+            'contact_person' => $supplier->contact_person,
+            'note' => $supplier->note,
+            'active' => $supplier->active,
+          ];
+
+          echo json_encode($data);
       }
 
       public function supplierupdate(Request $request, $id)
@@ -114,6 +129,7 @@ class SupplierController extends Controller
             'email' => 'required|email',
             'contact_person' => 'required',
           ]);
+
           $data=[
             'name' => ucfirst($request->name),
             'address' => $request->address,
@@ -127,6 +143,7 @@ class SupplierController extends Controller
             'note' => $request->note,
             'user_id' => Auth::user()->id
           ];
+
           Supplier::find($ids)->update($data);
           flash()->success('Success', 'Supplier Updated');
           return redirect('master/supplier');

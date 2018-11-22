@@ -86,7 +86,7 @@ var table = $('#measuretable').DataTable({
     ],
         order: [0, 'desc'],
 });
-// Showing add product Form
+
 function editForm(id){
     $('#inputhidden').val('PATCH');
     $('#measureform')[0].reset();
@@ -105,7 +105,7 @@ function editForm(id){
       },
     });
   }
-//Menghapud data
+
   function deleteForm(id) {
     swal({
       title: 'Are, You Sure ?',

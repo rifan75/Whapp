@@ -75,7 +75,11 @@ class MeasureController extends Controller
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
           $measure=Measure::find($ids);
-          echo json_encode($measure);
+
+          $data = [
+            'name' => $measure->name,
+          ];
+          echo json_encode($data);
       }
 
       public function measureupdate(Request $request, $id)

@@ -21,7 +21,6 @@ class AppServiceProvider extends ServiceProvider
           $items = Warehouse::all()->map(function (Warehouse $warehouse) {
               return [
                   'text' => $warehouse['name'],
-                  'url' => 'master/warehouse',
                   'icon' => 'home',
                   'submenu' => [
                                   [
