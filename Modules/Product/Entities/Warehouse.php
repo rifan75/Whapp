@@ -20,12 +20,12 @@ class Warehouse extends Model
 
     public function user()
     {
-        return $this->belongsTo('Modules\User\Entities\User','user_id','id');
+        return $this->belongsTo('Modules\Product\Entities\User','user_id','id');
     }
 
     public function inchargedata()
     {
-        return $this->belongsTo('Modules\User\Entities\User','incharge','id');
+        return $this->belongsTo('Modules\Product\Entities\User','incharge','id');
     }
 
 

@@ -32,3 +32,27 @@
 	</script>
 
 @endif
+
+@if (session()->has('flash_confirm_print'))
+
+	<script>
+	var id = '{{ Session::get('id')}}';
+	console.log(id);
+	swal({
+		title: "{{ session('flash_confirm_print.message') }}",
+		text: "Do You Want To Print ?",
+		type: "{{ session('flash_confirm_print.level') }}",
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Ya, Print It!'
+	}).then((result) => {
+					if (result.value) {
+			    	window.open('/purchase/'+id+'/print', '_blank');
+				  } else {
+				  }
+
+				});
+	</script>
+
+@endif

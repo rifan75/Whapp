@@ -25,7 +25,7 @@ class CreatePurchaseTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->unsignedBigInteger('payment')->default(0);
             $table->string('sendto');
-            $table->string('imageinvoice_path')->default("purchases/product.jpg");
+            $table->softDeletes();
 	          $table->timestamps();
         });
     }

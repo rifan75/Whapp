@@ -35,7 +35,7 @@
       <div class="box-body">
         <form method="post" id="formproducttable">
           <meta id="token" name="token" content="{{ csrf_token() }}">
-        <table id="producttable" class="table table-bordered table-hover">
+        <table id="producttable" class="table table-bordered table-hover" style="width:100%">
           <thead style="vertical-align:middle">
             <tr bgcolor="#D3D3D3" >
               <th ></th>

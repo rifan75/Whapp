@@ -3,16 +3,27 @@
 namespace Modules\Purchase\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use Hashids\Hashids;
 
 class Purchase extends Model
 {
-    protected $table = "lerp_purchase";
+    use SoftDeletes;
+    protected $table = "purchase";
 
+    protected $appends = ['hashid'];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'order_date',
-        'send_date'
+        'send_date',
+        'deleted_at'
     ];
-
     /**
      * The attributes that are mass assignable.
      *
@@ -31,22 +42,29 @@ class Purchase extends Model
         'imageinvoice_path',
     ];
 
+    public function getHashidAttribute()
+    {
+        $hash = config('app.hash_key');
+        $hashids = new Hashids($hash,20);
+        return $hashids->encode($this->attributes['id']);
+    }
+
     public function purchasedetail()
     {
-        return $this->hasMany('App\Purchasedetail','purchase_id','id');
+        return $this->hasMany('Modules\Purchase\Entities\Purchasedetail','purchase_id','id');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User','user_id','id');
+        return $this->belongsTo('Modules\Purchase\Entities\User','user_id','id');
     }
 
     public function supplier()
     {
-        return $this->belongsTo('App\Supplier','supplier_id','id');
+        return $this->belongsTo('Modules\Purchase\Entities\Supplier','supplier_id','id');
     }
     public function warehouse()
     {
-        return $this->belongsTo('App\Warehouse','sendto','id');
+        return $this->belongsTo('Modules\Purchase\Entities\Warehouse','sendto','id');
     }
 }

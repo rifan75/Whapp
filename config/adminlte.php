@@ -108,47 +108,57 @@ return [
     */
 
     'menu' => [
-        'MASTER DATA',
         [
-            'text' => 'User',
-            'icon' => 'user',
+            'text' => 'Master Data',
+            'icon' => 'info',
             'can'  => 'isAdmin',
             'submenu' => [
-                [
-                    'text' => 'List & Add User',
-                    'icon' => 'caret-right',
-                    'url'  => 'user/register',
-                ],
-                [
-                    'text' => 'Edit Profile',
-                    'icon' => 'caret-right',
-                    'url'  => 'user/profileedit',
-                ],
+
+              [
+                  'text' => 'User',
+                  'icon' => 'user',
+                  'can'  => 'isAdmin',
+                  'submenu' => [
+                      [
+                          'text' => 'List & Add User',
+                          'icon' => 'caret-right',
+                          'url'  => 'user/register',
+                      ],
+                      [
+                          'text' => 'Edit Profile',
+                          'icon' => 'caret-right',
+                          'url'  => 'user/profileedit',
+                      ],
+                  ],
+              ],
+              [
+                  'text' => 'Brand',
+                  'url'  => 'master/brand',
+                  'can'  => 'isAdmin',
+                  'icon' => 'file',
+              ],
+
+              [
+                  'text' => 'Measure',
+                  'url'  => 'master/measure',
+                  'can'  => 'isAdmin',
+                  'icon' => 'lock',
+              ],
+              [
+                  'text' => 'Supplier',
+                  'url'  => 'master/supplier',
+                  'icon' => 'user',
+              ],
+              [
+                  'text' => 'Warehouse Data',
+                  'url'  => 'master/warehouse',
+                  'can'  => 'isAdmin',
+                  'icon' => 'home',
+              ],
             ],
         ],
-        [
-            'text' => 'Brand',
-            'url'  => 'master/brand',
-            'can'  => 'isAdmin',
-            'icon' => 'file',
-        ],
-        [
-            'text' => 'Measure',
-            'url'  => 'master/measure',
-            'can'  => 'isAdmin',
-            'icon' => 'lock',
-        ],
-        [
-            'text' => 'Supplier',
-            'url'  => 'master/supplier',
-            'icon' => 'user',
-        ],
-        [
-            'text' => 'Warehouse',
-            'url'  => 'master/warehouse',
-            'can'  => 'isAdmin',
-            'icon' => 'home',
-        ],
+
+
         'APPLICATION',
         [
             'text' => 'Profile',
@@ -200,11 +210,6 @@ return [
                     'text' => 'Purchase Order',
                     'icon' => 'caret-right',
                     'url'  => 'purchase/order',
-                ],
-                [
-                    'text' => 'Supplier',
-                    'icon' => 'caret-right',
-                    'url'  => 'purchase/supplier',
                 ],
             ],
         ],

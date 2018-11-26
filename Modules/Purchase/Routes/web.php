@@ -13,4 +13,12 @@
 
 Route::prefix('purchase')->group(function() {
     Route::get('/', 'PurchaseController@index');
+    Route::get('/getpurchase', 'PurchaseController@getPurchase');
+    Route::get('/order', 'PurchaseController@purchaseorder');
+    Route::get('/getproduct', 'PurchaseController@getProduct');
+    Route::get('/gen', 'PurchaseController@purchasegen');
+    Route::post('/', 'PurchaseController@purchasestore');
+    Route::get('/{id}/edit', 'PurchaseController@purchaseedit');
+    Route::patch('/{id}', 'PurchaseController@purchaseupdate');
+    Route::get('/{id}/print', 'PurchaseController@purchaseprint');
 });

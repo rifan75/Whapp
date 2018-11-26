@@ -5,6 +5,7 @@ namespace Modules\Master\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+
 use Hashids\Hashids;
 use Modules\Master\Entities\Measure;
 use Modules\Master\Entities\User;

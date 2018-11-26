@@ -11,7 +11,8 @@ class Warehouse extends Model
     use SoftDeletes;
 
     protected $table = "warehouse";
-    protected $appends = ['hashincharge'];
+    protected $appends = ['hashid',
+                          'hashincharge'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -19,7 +20,7 @@ class Warehouse extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -40,6 +41,12 @@ class Warehouse extends Model
         'note',
         'active',
     ];
+    public function getHashidAttribute()
+    {
+        $hash = config('app.hash_key');
+        $hashids = new Hashids($hash,20);
+        return $hashids->encode($this->attributes['id']);
+    }
 
     public function getHashinchargeAttribute()
     {
@@ -50,12 +57,12 @@ class Warehouse extends Model
 
     public function user()
     {
-        return $this->belongsTo('Modules\User\Entities\User','user_id','id');
+        return $this->belongsTo('Modules\Master\Entities\User','user_id','id');
     }
 
     public function inchargedata()
     {
-        return $this->belongsTo('Modules\User\Entities\User','incharge','id');
+        return $this->belongsTo('Modules\Master\Entities\User','incharge','id');
     }
 
 

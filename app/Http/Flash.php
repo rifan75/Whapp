@@ -3,7 +3,7 @@
 namespace App\Http;
 
 class Flash {
-	
+
 	public function create($title, $message, $level, $key='flash_message')
 	{
 
@@ -14,7 +14,7 @@ class Flash {
 		]);
 
 	}
-	
+
 	public function info($title, $message)
 	{
 
@@ -35,16 +35,18 @@ class Flash {
 		return $this->create($title, $message, 'error');
 
 	}
-	
+
 	public function overlay($title, $message, $level='success')
 	{
 
 		return $this->create($title, $message, $level, 'flash_message_overlay');
 
 	}
+
+	public function print($title, $message, $level='success')
+	{
+
+		return $this->create($title, $message, $level, 'flash_confirm_print');
+
+	}
 }
-
-
-
-
-

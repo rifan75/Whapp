@@ -24,14 +24,25 @@ class AppServiceProvider extends ServiceProvider
                   'icon' => 'home',
                   'submenu' => [
                                   [
-                                    'text' => 'Local Inventory',
-                                    'url'  => 'admin/db-admin',
+                                    'text' => 'Inventory',
+                                    'url'  => url('warehouse/'.$warehouse['hashid']),
                                     'icon' => 'user',
                                   ],
                                   [
                                     'text' => 'Sending Stock',
-                                    'url'  => 'admin/db-admin',
                                     'icon' => 'user',
+                                    'submenu' => [
+                                        [
+                                            'text' => 'List of Sending Stock',
+                                            'icon' => 'caret-right',
+                                            'url'  => url('warehouse/'.$warehouse['hashid']).'/send',
+                                        ],
+                                        [
+                                            'text' => 'Add Sending Stock',
+                                            'icon' => 'caret-right',
+                                            'url'  => url('warehouse/addsend/'.$warehouse['code']),
+                                        ],
+                                    ],
                                   ],
                                   [
                                     'text' => 'Accept Stock',
