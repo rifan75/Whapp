@@ -21,10 +21,9 @@ class CreateSenddetailTable extends Migration
             $table->unsignedInteger('quantity');
             $table->string('measure');
             $table->integer('sub_total')->nullable();
+            $table->string('from');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
-            $table->integer('company_id')->unsigned();
-            $table->string('jenis');
             $table->string('inventory_id');
             $table->softDeletes();
             $table->timestamps();

@@ -5,12 +5,14 @@ namespace Modules\User\Entities;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Hashids\Hashids;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
 
     protected $appends = ['hashid'];
     /**
@@ -19,7 +21,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','level', 'active', 'picture_path'
+        'name',
+        'email',
+        'password',
+        'level',
+        'active',
+        'picture_path'
     ];
 
     /**

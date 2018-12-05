@@ -10,6 +10,7 @@ use Modules\Warehouse\Entities\Warehouse;
 use Modules\Warehouse\Entities\Send;
 use Modules\Warehouse\Entities\Senddetail;
 use Modules\Warehouse\Entities\Inventory;
+use Modules\Warehouse\Entities\Inventorysum;
 use Modules\Warehouse\Entities\Product;
 use Modules\Warehouse\Entities\Supplier;
 use Modules\Warehouse\Entities\Measure;
@@ -51,93 +52,45 @@ class SendController extends Controller
           $row = array();
           $rowdetail = array();
           $row[] = $no;
-          $row[] = $send->id;
+          $row[] = $send->hashid;
           $row[] = $send->no_letter;
-        //  dd($send->from);
-          if(substr($send->from, 0, 2)=="WH"){
-            if(count($send->warehousefrom)==0){
-              $row[] = "Gudang Tidak Ada/ Terhapus";
-            }else{
-              $row[] = $send->warehousefrom->warehouse_name;
-            }
+          if(count($send->warehousefrom)==0){
+            $row[] = "No Warehouse/ Deleted";
           }else{
-            if(count($send->outletfrom)==0){
-              $row[] = "Outlet Tidak Ada/ Terhapus";
-            }else{
-              $row[] = $send->ouletfrom->outlet_name;
-            }
+            $row[] = $send->warehousefrom->warehouse_name;
           }
-          $row[] = $send->letter_date->format('d-m-Y');
+          $row[] = $send->letter_date->format('d-M-Y');
           $row[] = $send->note;
           $row[] = $send->user->name;
           if($send->arr_date){
-            $row[] = $send->arr_date->format('d-m-Y');
+            $row[] = $send->arr_date->format('d-M-Y');
           }else{
-            $row[] = "Belum Tersend";
+            $row[] = "Not Arrive Yet";
           }
-          if(substr($send->sendto, 0, 2)=="WH"){
-            if(count($send->warehousesendto)==0){
-              $row[] = "Gudang Tidak Ada/ Terhapus";
-            }else{
-              $row[] = $send->warehousesendto->warehouse_name;
-            }
+          if(count($send->warehousesendto)==0){
+            $row[] = "No Warehouse/ Deleted";
           }else{
-              if(count($send->outletsendto)==0){
-                $row[] = "Outlet Tidak Ada/ Terhapus";
-              }else{
-                $row[] = $send->outletsendto->outlet_name;
-              }
+            $row[] = $send->warehousesendto->name;
           }
           $row[] = $send->imageinvoice_path;
           if($send->arr_date){
-            $row[] = "Pengiriman Selesai";
+            $row[] = "&nbsp;&nbsp;&nbsp;<a href='#' onclick='deleteForm(\"".$send->hashid."\")' type='submit'><i class='fa fa-trash'></i></a>
+                      <br>Process Finished";
           }else{
-            $row[] = "&nbsp;&nbsp;&nbsp; <a href='/send/".$send->id."/edit'><i class='fa fa-pencil-square-o'></i></i></a>
-                    &nbsp;&nbsp;&nbsp;<a href='#' onclick='deleteForm(".$send->id.")' type='submit'><i class='fa fa-trash'></a>";
+            $row[] = "&nbsp;&nbsp;&nbsp; <a href='/warehouse/".$send->hashid."/send_edit'><i class='fa fa-pencil-square-o'></i></a>
+                    &nbsp;&nbsp;&nbsp;<a href='#' onclick='deleteForm(\"".$send->hashid."\")' type='submit'><i class='fa fa-trash'></i></a>";
           }
-
+          $row['note'] = $send->note;
           foreach ($send->senddetail as $detail) {
-            if($detail->jenis==1){
-              $rowdetail['skuproduct_id'][] = $detail->product->product_name;
-              $rowdetail['skuproduct_code'][] = $detail->product->product_id;
-            }else{
-              $rowdetail['skuproduct_id'][] = $detail->sku->sku_name;
-              $rowdetail['skuproduct_code'][] = $detail->sku->sku_code;
-            }
+            $rowdetail['product_id'][] = $detail->product->name;
+            $rowdetail['product_code'][] = $detail->product->code;
             $rowdetail['quantity'][] = $detail->quantity;
             $rowdetail['measure'][] = $detail->measure;
-
           }
-          $row['skuproduct_id'] = $rowdetail['skuproduct_id'];
-          $row['skuproduct_code'] = $rowdetail['skuproduct_code'];
+          $row['product_id'] = $rowdetail['product_id'];
+          $row['product_code'] = $rowdetail['product_code'];
           $row['quantity'] = $rowdetail['quantity'];
           $row['measure'] = $rowdetail['measure'];
-          $data[] = $row;
-        }
-
-        return DataTables::of($data)->escapeColumns([])->make(true);
-    }
-
-    public function getInventory($id)
-    {
-        $company = Auth::user()->company_id;
-        $inventory = Inventory::selectRaw('ANY_VALUE(id),id_product,SUM(in_out_qty) as quantity,SUM(sub_total) as sub_total, SUM(sub_total)/SUM(in_out_qty) as hargabeli, measure,ANY_VALUE(gudang)')->where('company_id', $company)->where('gudang',$id)
-        ->groupBy('id_product','measure')->get();
-        $no = 0;
-        $data = array();
-        foreach ($inventory as $sedia) {
-          $no ++;
-          $row = array();
-          $row[] = $no;
-          $row[] = $sedia->id_product;
-          $row[] = $sedia->product->product_id;
-          $row[] = $sedia->product->product_name;
-          $row[] = $sedia->hargabeli;
-          $row[] = $sedia->quantity;
-          $row[] = $sedia->measure;
-          $row[] = $id;
-          $row[] = "<button class='btn btn-primary btn-xs' type='button' id='clicktabel'>
-                    <span class='glyphicon glyphicon-share-alt' aria-hidden='true'></span></button>";
           $data[] = $row;
         }
 
@@ -151,140 +104,126 @@ class SendController extends Controller
         return view('warehouse::send.send_items',compact('warehouses','location'));
     }
 
-    public function sendskustore(Request $request)
+    public function getInventory($id)
     {
-      //dd($request);
-        $pesan = [
-                  'required' => 'Ada kolom yang belum diisi.',
-                  'unique' => 'Nomor surat, sudah dipakai.'
-                ];
-        $this->validate($request, [
-                'no_letter' => [
-                'required',
-                Rule::unique('lerp_send')->where(function ($query) {
-                      $company = Auth::user()->company_id;
-                      return $query->where('company_id', $company);
-                  })
-                ],
-                'sendto' => 'required',
-                'quantity' => 'required',
-                'letter_date' => 'required',
-    	  ],$pesan);
-        $date = DateTime::createFromFormat('d-m-Y', $request->letter_date);
-        $tanggal = $date->format('Y-m-d');
-        $company = Auth::user()->company_id;
-        $user_id = Auth::user()->id;
-        $send = [
-          'no_letter' => $request->no_letter,
-          'letter_date' => $tanggal,
-          'from' => $request->from,
-          'sendto' => $request->sendto,
-          'note' => "Pengiriman barang siap jual dengan nomor surat ".$request->no_letter." tanggal ".$tanggal." ".$request->note,
-          'user_id' => $user_id,
-          'company_id' => $company,
-        ];
-       $sendid = send::create($send);
-
-        $id_sku = $request->id_sku;
-        $quantity = $request->quantity;
-        $measure = $request->measuredetail;
-        foreach ($id_sku as $key => $m )  {
-            $inventorysku= [
-                'id_sku' => $id_sku[$key],
-                'in_out_qty' => -$quantity[$key],
-                'measure' => $measure[$key],
-                'lokasi' => $request->from,
-                'arr_date' => $tanggal,
-                'user_id' => $user_id,
-                'company_id' => $company,
-                'note' => "Pengiriman barang siap jual dengan nomor surat ".$request->no_letter." tanggal ".$tanggal,
-            ];
-            $invid=Inventorysku::create($inventorysku);
-            $senddetail= [
-                'skuproduct_id' => $id_sku[$key],
-                'send_id' => $sendid->id,
-                'quantity' => $quantity[$key],
-                'measure' => $measure[$key],
-                'jenis' => "2",
-                'user_id' => $user_id,
-                'company_id' => $company,
-                'inventory_id' => $invid->id,
-            ];
-          //  dd($senddetail);
-            senddetail::create($senddetail);
-
+        $hash = config('app.hash_key');
+        $hashids = new Hashids($hash,20);
+        $ids=$hashids->decode($id)[0];
+        $url = config('app.url_images');
+        $inventories = Inventory::selectRaw('ANY_VALUE(id),id_product,SUM(in_out_qty) as quantity,SUM(sub_total) as sub_total, SUM(sub_total)/SUM(in_out_qty) as hargabeli, measure,ANY_VALUE(warehouse)')
+        ->where('warehouse',$ids)
+        ->groupBy('id_product','measure')->get();
+        $no = 0;
+        $data = array();
+        foreach ($inventories as $inventory) {
+          $no ++;
+          $row = array();
+          $row[] = $no;
+          $row[] = $inventory->hashproduct;
+          $row[] = $inventory->product->code;
+          $row[] = $inventory->product->name;
+          $row[] = $inventory->hargabeli;
+          $row[] = $inventory->quantity;
+          $row[] = $inventory->measure;
+          $row[] = $id;
+          $row[] = "<button class='btn btn-primary btn-xs' type='button' id='clicktabel'>
+                    <span class='glyphicon glyphicon-share-alt' aria-hidden='true'></span></button>";
+          $row[] = $url.'/'.$inventory->product->image_path['image1'];
+          $row[] = $inventory->product->brand;
+          $row[] = $inventory->product->model;
+          $row[] = $inventory->product->color;
+          $data[] = $row;
         }
-	      flash()->success('Success', 'Pengiriman sudah di Buat');
-        return redirect('send/'.$request->from);
+
+        return DataTables::of($data)->escapeColumns([])->make(true);
     }
 
-    public function sendbarangstore(Request $request)
+    public function Sendgen($id)
     {
-        $pesan = [
-                  'required' => 'Ada kolom yang belum diisi.',
-                  'unique' => 'Nomor surat, sudah dipakai.'
-                ];
-        $this->validate($request, [
-                'no_letter' => [
-                'required',
-                Rule::unique('lerp_send')->where(function ($query) {
-                      $company = Auth::user()->company_id;
-                      return $query->where('company_id', $company);
-                  })
-                ],
-                'sendto' => 'required',
-                'quantity' => 'required',
-                'letter_date' => 'required',
-    	  ],$pesan);
-        $date = DateTime::createFromFormat('d-m-Y', $request->letter_date);
-        $tanggal = $date->format('Y-m-d');
-        $company = Auth::user()->company_id;
-        $user_id = Auth::user()->id;
-        $send = [
-          'no_letter' => $request->no_letter,
-          'letter_date' => $tanggal,
-          'from' => $request->from,
-          'sendto' => $request->sendto,
-          'note' => "Pengiriman barang dengan nomor surat ".$request->no_letter." tanggal ".$tanggal." ".$request->note,
-          'user_id' => $user_id,
-          'company_id' => $company,
-        ];
-       $sendid = send::create($send);
+          $year = date("Y");
+          $results='';
+          $resultsfrom='';
+          $l=3;
+          $artificial_name = "DELIVERY";
+          $warehouse=Warehouse::where('code',$id)->first();
+          $name=$warehouse->name;
+          $vowels = array('A', 'E', 'I', 'O', 'U', 'Y'); // vowels
+          preg_match_all('/[A-Z][a-z]*/', ucfirst($artificial_name), $m); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
+          foreach($m[0] as $substring){
+              $substring = str_replace($vowels, '', strtoupper($substring)); // String to lower case and remove all vowels
+              $results .= preg_replace('/([A-Z]{'.$l.'})(.*)/', '$1', $substring); // Extract the first N letters.
+          }
+          preg_match_all('/[A-Z][a-z]*/', ucfirst($name), $k); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
+          foreach($k[0] as $substring){
+              $substring = str_replace($vowels, '', strtoupper($substring)); // String to lower case and remove all vowels
+              $resultsfrom .= preg_replace('/([A-Z]{'.$l.'})(.*)/', '$1', $substring); // Extract the first N letters.
+          }
+          $id=Send::where('from',$id)->whereYear('created_at', '=', $year)->count()+1;
+          $data = str_pad($id, 4, 0, STR_PAD_LEFT)."/".$resultsfrom."/".$results."/".$year; // Add the ID
+          echo json_encode($data);
+    }
 
-        $product_id = $request->product_id;
-        $quantity = $request->quantity;
-        $subtotal =str_replace(",", "", $request->sub_total);
-        $measure = $request->measure;
-        foreach ($product_id as $key => $m )  {
+
+    public function Sendstore(Request $request)
+    {
+          $hash = config('app.hash_key');
+          $hashids = new Hashids($hash,20);
+          $fromids=$hashids->decode($request->fromid)[0];
+
+          $this->validate($request, [
+                  'no_letter' => 'required|unique:send',
+                  'sendto' => 'required',
+                  'quantity' => 'required',
+                  'letter_date' => 'required',
+      	  ]);
+
+          $date = DateTime::createFromFormat('d-M-Y', $request->letter_date)->format('Y-m-d');
+
+          $send = [
+            'no_letter' => $request->no_letter,
+            'letter_date' => $date,
+            'from' => $request->from,
+            'sendto' => $request->sendto,
+            'note' => $request->note,
+            'user_id' => Auth::user()->id,
+          ];
+          $send_id = send::create($send);
+
+          $hash = config('app.hash_key');
+          $hashids = new Hashids($hash,20);
+
+          $product_id = $request->product_id;
+          $quantity = $request->quantity;
+          $subtotal =str_replace(",", "", $request->sub_total);
+          $measure = $request->measure;
+          foreach ($product_id as $key => $m )  {
             $inventory= [
-                'id_product' => $product_id[$key],
+                'id_product' => $hashids->decode($m)[0],
                 'in_out_qty' => -$quantity[$key],
                 'measure' => $measure[$key],
-                'gudang' => $request->fromid,
+                'warehouse' => $fromids,
                 'sub_total' => -$subtotal[$key],
-                'arr_date' => $tanggal,
-                'user_id' => $user_id,
-                'company_id' => $company,
-                'note' => "Pengiriman barang dengan nomor surat ".$request->no_letter." tanggal ".$tanggal,
+                'arr_date' => $date,
+                'type' => '5',
+                'user_id' => Auth::user()->id,
+                'note' => "Delivery with letter no. ".$request->no_letter." at ".$date,
             ];
-            $invid=Inventory::create($inventory);
+            $inventory_id=Inventory::create($inventory);
             $senddetail= [
-                'skuproduct_id' => $product_id[$key],
-                'send_id' => $sendid->id,
+                'product_id' => $hashids->decode($m)[0],
+                'send_id' => $send_id->id,
                 'quantity' => $quantity[$key],
                 'sub_total' => $subtotal[$key],
                 'measure' => $measure[$key],
-                'jenis' => "1",
-                'user_id' => $user_id,
-                'company_id' => $company,
-                'inventory_id' => $invid->id,
+                'from' => $fromids,
+                'user_id' => Auth::user()->id,
+                'inventory_id' => $inventory_id->id,
             ];
-          //  dd($senddetail);
-            senddetail::create($senddetail);
 
+            Senddetail::create($senddetail);
         }
-	      flash()->success('Success', 'Pengiriman sudah di Buat');
-        return redirect('send/'.$request->from);
+	      flash()->success('Success', 'Delivery is Made');
+        return redirect('/warehouse/addsend/'.$request->from);
     }
 
     // public function sendshow($id)
@@ -297,141 +236,105 @@ class SendController extends Controller
     //
     // }
     //
-    public function sendedit($id)
+    public function Sendedit($id)
     {
-        $company = Auth::user()->company_id;
+        $hash = config('app.hash_key');
+        $hashids = new Hashids($hash,20);
+        $ids=$hashids->decode($id)[0];
 
-        $senddetail=senddetail::where('send_id',$id)->get();
-        $sendjenis=senddetail::where('send_id',$id)->first();
-        $send=send::find($id);
-        $outlet = Outlet::where('company_id', $company)->where('outlet_code', '!=', $send->from)->get();
-        $warehouse = Warehouse::where('company_id', $company)->where('warehouse_code', '!=', $send->from)->get();
-        if(substr($send->from, 0, 2)=="WH"){
-           $lokasi = Warehouse::where('company_id', $company)->where('warehouse_code', $send->from )->first();
-        }else{
-           $lokasi = Outlet::where('company_id', $company)->where('outlet_code', $send->from )->first();
-        }
-        if($sendjenis->jenis=="1"){
-          return view('persediaan.send.sendeditbarang',compact('warehouse','senddetail','send','lokasi'));
-        }else{
-          return view('persediaan.send.sendeditsku',compact('warehouse','outlet','senddetail','send','lokasi'));
-        }
-
-
+        $senddetail=Senddetail::where('send_id',$ids)->get();
+        $send=Send::find($ids);
+        $warehouse = Warehouse::where('code', '!=', $send->from)->get();
+        $location = Warehouse::where('code', $send->from )->first();
+        $maksimum = Inventorysum::where('warehouse', $location->id )->get();
+        return view('warehouse::send.send_items_edit',compact('warehouse','senddetail','send','location','maksimum'));
     }
 
-    public function sendupdate(Request $request, $id)
+    public function Sendupdate(Request $request, $id)
     {
-         $pesan = [
-                   'required' => 'Ada kolom yang belum diisi.',
-                   'unique' => 'Nomor surat, sudah dipakai.'
-                 ];
+         $hash = config('app.hash_key');
+         $hashids = new Hashids($hash,20);
+         $ids=$hashids->decode($id)[0];
+         $fromids=$hashids->decode($request->fromid)[0];
+
          $this->validate($request, [
                  'no_letter' => [
-                 'required',
-                 Rule::unique('lerp_send')->where(function ($query) {
-                       $company = Auth::user()->company_id;
-                       return $query->where('company_id', $company);
-                   })->ignore($id),
+                   'required',
+                    Rule::unique('send')->ignore($ids),
                  ],
                  'sendto' => 'required',
                  'letter_date' => 'required',
-     	  ],$pesan);
-        $date = DateTime::createFromFormat('d-m-Y', $request->letter_date);
-        $tanggal = $date->format('Y-m-d');
+     	  ]);
+
+        $date = DateTime::createFromFormat('d-M-Y', $request->letter_date)->format('Y-m-d');
+
          $send = [
            'no_letter' => $request->no_letter,
-           'letter_date' => $tanggal,
+           'letter_date' => $date,
            'from' => $request->from,
            'sendto' => $request->sendto,
-           'note' => "Pengiriman barang dengan nomor surat ".$request->no_letter." tanggal ".$tanggal." ".$request->note,
+           'note' => $request->note,
            'user_id' => Auth::user()->id,
-           'company_id' => Auth::user()->company_id,
          ];
 
-          send::find($id)->update($send);
-          flash()->success('Success', 'Pengiriman Sudah Di Update');
-          return redirect('send/'.$request->from);
-    }
+          Send::find($ids)->update($send);
 
+          $senddetails=Senddetail::where('send_id',$ids)->get();
+          foreach($senddetails as $senddetail){
+                      Inventory::where('id', $senddetail->inventory_id)->forceDelete();
+                    }
 
-    public function sendskugen($id)
-    {
-        $year = date("Y");
-        $results='';
-        $resultsfrom='';
-        $l=3;
-        $company = Auth::user()->company_id;
-        $company_name = Auth::user()->company->company_name;
-        if(substr($id, 0, 2)=="WH"){
-          $warehouse=Warehouse::where('company_id',$company)->where('warehouse_code',$id)->first();
-          $name=$warehouse->warehouse_name;
-        }else{
-          $outlet=Outlet::where('company_id',$company)->where('outlet_code',$id)->first();
-          $name=$outlet->outlet_name;
-        }
-        $vowels = array('A', 'E', 'I', 'O', 'U', 'Y'); // vowels
-        preg_match_all('/[A-Z][a-z]*/', ucfirst($company_name), $m); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
-        foreach($m[0] as $substring){
-            $substring = str_replace($vowels, '', strtoupper($substring)); // String to lower case and remove all vowels
-            $results .= preg_replace('/([A-Z]{'.$l.'})(.*)/', '$1', $substring); // Extract the first N letters.
-        }
-        preg_match_all('/[A-Z][a-z]*/', ucfirst($name), $k); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
-        foreach($k[0] as $substring){
-            $substring = str_replace($vowels, '', strtoupper($substring)); // String to lower case and remove all vowels
-            $resultsfrom .= preg_replace('/([A-Z]{'.$l.'})(.*)/', '$1', $substring); // Extract the first N letters.
-        }
-        $id=send::where('company_id', $company )->where('from',$id)->whereYear('created_at', '=', $year)->count()+1;
-        $hasil = 'KRM-'. str_pad($id, 4, 0, STR_PAD_LEFT)."-SKU/".$resultsfrom."/".$results."/".$year; // Add the ID
-        echo json_encode($hasil);
-    }
-    public function sendgen($id)
-    {
-        $year = date("Y");
-        $results='';
-        $resultsfrom='';
-        $l=3;
-        $company = Auth::user()->company_id;
-        $company_name = Auth::user()->company->company_name;
-        if(substr($id, 0, 2)=="WH"){
-          $warehouse=Warehouse::where('company_id',$company)->where('warehouse_code',$id)->first();
-          $name=$warehouse->warehouse_name;
-        }else{
-          $outlet=Outlet::where('company_id',$company)->where('outlet_code',$id)->first();
-          $name=$outlet->outlet_name;
-        }
-        $vowels = array('A', 'E', 'I', 'O', 'U', 'Y'); // vowels
-        preg_match_all('/[A-Z][a-z]*/', ucfirst($company_name), $m); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
-        foreach($m[0] as $substring){
-            $substring = str_replace($vowels, '', strtoupper($substring)); // String to lower case and remove all vowels
-            $results .= preg_replace('/([A-Z]{'.$l.'})(.*)/', '$1', $substring); // Extract the first N letters.
-        }
-        preg_match_all('/[A-Z][a-z]*/', ucfirst($name), $k); // Match every word that begins with a capital letter, added ucfirst() in case there is no uppercase letter
-        foreach($k[0] as $substring){
-            $substring = str_replace($vowels, '', strtoupper($substring)); // String to lower case and remove all vowels
-            $resultsfrom .= preg_replace('/([A-Z]{'.$l.'})(.*)/', '$1', $substring); // Extract the first N letters.
-        }
-        $id=send::where('company_id', $company )->where('from',$id)->whereYear('created_at', '=', $year)->count()+1;
-        $hasil = 'KRM-'. str_pad($id, 4, 0, STR_PAD_LEFT)."/".$resultsfrom."/".$results."/".$year; // Add the ID
-        echo json_encode($hasil);
-    }
-    public function senddelete($id)
-    {
-        $sendjenis=senddetail::where('company_id',Auth::user()->company_id)->where('send_id', $id)->first();
-        $senddetails=senddetail::where('company_id',Auth::user()->company_id)->where('send_id', $id)->get();
-        $send=send::where('company_id',Auth::user()->company_id)->find($id);
-        $from=$send->from;
-          if($sendjenis->jenis=="1"){
-            foreach ($senddetails as $senddetail )  {
-              Inventory::where('company_id',Auth::user()->company_id)->where('id', $senddetail->inventory_id)->delete();
-            }
-          }else{
-              Inventorysku::where('company_id',Auth::user()->company_id)->where('id', $senddetail->inventory_id)->delete();
+          Senddetail::where('send_id',$ids)->forceDelete();
+
+          $product_id = $request->product_id;
+          $quantity = $request->quantity;
+          $subtotal =str_replace(",", "", $request->sub_total);
+          $measure = $request->measure;
+          foreach ($product_id as $key => $m )  {
+            $inventory= [
+                'id_product' => $hashids->decode($m)[0],
+                'in_out_qty' => -$quantity[$key],
+                'measure' => $measure[$key],
+                'warehouse' => $fromids,
+                'sub_total' => -$subtotal[$key],
+                'arr_date' => $date,
+                'type' => '5',
+                'user_id' => Auth::user()->id,
+                'note' => "Delivery with letter no. ".$request->no_letter." at ".$date,
+            ];
+            $inventory_id=Inventory::create($inventory);
+            $senddetail= [
+                'product_id' => $hashids->decode($m)[0],
+                'send_id' => $ids,
+                'quantity' => $quantity[$key],
+                'sub_total' => $subtotal[$key],
+                'measure' => $measure[$key],
+                'from' => $fromids,
+                'user_id' => Auth::user()->id,
+                'inventory_id' => $inventory_id->id,
+            ];
+            Senddetail::create($senddetail);
           }
-          senddetail::where('company_id',Auth::user()->company_id)->where('send_id', $id)->delete();
-          send::where('company_id',Auth::user()->company_id)->where('id', $id)->delete();
+          flash()->success('Success', 'Delivery is Updated');
+          return redirect('/warehouse/'.$request->fromid.'/send');
+    }
 
-        return redirect('send/'.$from);
+    public function Senddelete($id)
+    {
+        $hash = config('app.hash_key');
+        $hashids = new Hashids($hash,20);
+        $ids=$hashids->decode($id)[0];
+
+        $senddetails=Senddetail::where('send_id', $ids)->get();
+        $send=Send::find($ids);
+        foreach ($senddetails as $senddetail )  {
+          Inventory::where('id', $senddetail->inventory_id)->delete();
+        }
+        Senddetail::where('send_id', $ids)->delete();
+        Send::where('id', $ids)->delete();
+
+        flash()->success('Success', 'Delivery is Deleted');
+        return back();
     }
 
 

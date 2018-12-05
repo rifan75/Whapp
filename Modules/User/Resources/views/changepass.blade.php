@@ -5,7 +5,7 @@
 {{-- page level styles --}}
 @section('css')
 <style>
-.box-header {background-color: #F89A14;}
+.box-header {background-color: #222d32;}
 .box-title {float: left;display: inline-block;font-size: 18px;line-height: 18px;font-weight: 400;margin: 0;
 	          padding: 0;margin-bottom: 8px;color: #fff
           }
@@ -20,7 +20,7 @@
 		</div>
 		<div class="box-body">
 			<div class="container-fluid" align="center">
-				<form id="userform" action="/changepasswd/{{$user_id}}" method="post" enctype="multipart/form-data" data-toggle="validator">
+				<form id="userform" action="/user/changepasswd/{{$user_id}}" method="post" enctype="multipart/form-data" data-toggle="validator">
 					{{csrf_field()}}
 					<input id="inputhidden" type='hidden' name='_method' value='PATCH'>
 					<div class="form-group col-md-8">

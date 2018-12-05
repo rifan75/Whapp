@@ -9,6 +9,7 @@ use Hashids\Hashids;
 
 class Purchasedetail extends Model
 {
+    use SoftDeletes;
     protected $table = "purchase_detail";
 
     protected $appends = ['hashproductid'];

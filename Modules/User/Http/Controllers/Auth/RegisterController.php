@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Storage;
 
 use Modules\User\Entities\User;
+use Modules\User\Entities\Profile;
 use Modules\User\Entities\Level;
 use Hashids\Hashids;
 use Auth;
@@ -35,7 +36,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/User/user';
+    protected $redirectTo = '/user/register';
 
     /**
      * Create a new controller instance.
@@ -98,10 +99,13 @@ class RegisterController extends Controller
               'password' => bcrypt($data['password']),
           ];
 
-          DB::transaction(function () use ($datauser){
-            $userid=User::create($datauser);
-            DB::insert('insert into user_detail (user_id) values (?)', [$userid->id]);
-          });
+          $user_id=User::create($datauser);
+          $dataprofile=[
+            'user_id' => $user_id->id,
+            'recorder' => Auth::user()->id,
+          ];
+
+          Profile::create($dataprofile);
 
           flash()->success('Success', 'User is Added');
           return Auth::user();

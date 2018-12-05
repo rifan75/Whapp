@@ -51,10 +51,10 @@
     		    </div>
           </div>
           <div class="form-group col-md-12">
-              <a href="#" onclick="generatepi()" class="btn btn-success"role="button">Generate Product Id</a>
+              <input name="code" id="code"  type="text" class="form-control " value="{{ old('code') }}" placeholder="Code" required>
           </div>
           <div class="form-group col-md-12">
-              <input name="code" id="code"  type="text" class="form-control " value="{{ old('code') }}" placeholder="Code" required>
+              <a href="#" onclick="generatepi()" class="btn btn-success"role="button">Generate Product Id</a>
           </div>
             <div class="form-group col-md-12">
                 <label for="hazardwarning">Hazard Warning : </label>

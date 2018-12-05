@@ -96,7 +96,7 @@ var table = $('#producttable').DataTable({
     ],
         order: [0, 'desc'],
 });
-// Add event listener for opening and closing details
+
 $('#producttable tbody').on('click', 'td.details-control', function () {
     var tr = $(this).closest('tr');
     var row = table.row( tr );
@@ -170,7 +170,6 @@ function calcTotals(){
 
 </script>
 
-
-    @include('flash')
+@include('flash')
 
 @endsection

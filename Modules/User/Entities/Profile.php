@@ -4,10 +4,12 @@ namespace Modules\User\Entities;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Profile extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
    	protected $table = "user_detail";
 
     /**

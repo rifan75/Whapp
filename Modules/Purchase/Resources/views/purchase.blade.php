@@ -117,7 +117,7 @@ var table = $('#purchasetable').DataTable({
         {data: 0, orderable: false},{data: 1,  visible: false},{data: 2},{data: 4, className: 'dt-center'},
         {data: 6, className: 'dt-center'},
         {data: 9},{data: 8, className: 'dt-right'},
-        {data: 3},{data: 5},{data: 11},
+        {data: 3},{data: 5},{data: 7},
     ],
         order: [2, 'desc'],
 });
@@ -138,32 +138,34 @@ $('#purchasetable tbody').on('click', 'td.details-control', function () {
         }
     });
 
-//Menghapus data
+
 function deleteForm(id) {
     swal({
-      title: 'Apakah, anda yakin ?',
-      text: "Data yg dihapus, tidak bisa dikembalikan",
-      type: 'warning',
+      title: "Are You Sure ?",
+      text: "Erased data, cannot be back",
+      type: "warning",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya, Hapus!'
+      confirmButtonText: 'Yes, Delete!'
     }).then((result) => {
+      if (result.value) {
             $.ajax({
-              url : "purchase/"+id,
+              url : "/purchase/"+id,
               type : "POST",
               data: {_method: 'DELETE'},
               beforeSend: function(xhr){xhr.setRequestHeader('X-CSRF-TOKEN', $("#token").attr('content'));},
               success : function(data){
               table.ajax.reload();
-              swal("Sukses","Data berhasil dihapus","success").catch(swal.noop);
+              swal("Success","Data is erased","success");
 
             },
               error : function(data) {
-              swal("Error","Tidak dapat menghapus data !","error").catch(swal.noop);
+              swal("Error","Cannot erased data !","error");
             }
             });
-          });
+          }
+      });
 }
 
 </script>

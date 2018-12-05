@@ -45,8 +45,8 @@ class AppServiceProvider extends ServiceProvider
                                     ],
                                   ],
                                   [
-                                    'text' => 'Accept Stock',
-                                    'url'  => 'admin/db-admin',
+                                    'text' => 'Accepting Stock',
+                                    'url'  => url('warehouse/'.$warehouse['hashid']).'/accept',
                                     'icon' => 'user',
                                   ]
                               ]

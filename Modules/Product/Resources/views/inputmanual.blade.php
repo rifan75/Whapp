@@ -44,6 +44,9 @@
                       <select class="form-control" name="type">
                         @foreach($types as $type)
                           <option value="{{ $type->id }}">{{ $type->id }} - {{ $type->name }}</option>
+                          @if ($type->id == 3)
+                            @break
+                          @endif
                         @endforeach
                       </select>
                     </div>

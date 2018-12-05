@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
 use Modules\User\Entities\User;
+use Modules\User\Entities\Profile;
 use Hashids\Hashids;
 use DataTables;
 use Auth;
@@ -120,7 +121,7 @@ class UserController extends Controller
 
           User::find($ids)->update($user + ['picture_path' => $path]);
           flash()->success('Success', 'User is Updated');
-          return redirect('user');
+          return back();
       }
 
       public function useractupdate($id,$act)
@@ -140,12 +141,11 @@ class UserController extends Controller
           $hash = config('app.hash_key');
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
-          $path = User::find($ids);
-          if($path->image_path!='users/images/picture.jpg'){
-            Storage::disk('s3')->delete(Auth::user()->company_id.'/'.$path->picture_path);
-          }
+          
           User::destroy($ids);
-          return redirect('user');
+          Profile::where('user_id',$ids)->delete();
+          flash()->success('Success', 'User is Deleted');
+          return back();
       }
 
       public function changepasswd()
@@ -168,7 +168,7 @@ class UserController extends Controller
         ]);
         $password=['password' => bcrypt($request->password)];
         User::find($ids)->update($password);
-        flash()->success('Success', 'Password telah di rubah');
-        return redirect('profile');
+        flash()->success('Success', 'Password is changed');
+        return redirect('/user/profile');
       }
 }

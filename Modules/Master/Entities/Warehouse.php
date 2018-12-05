@@ -60,7 +60,7 @@ class Warehouse extends Model
         return $this->belongsTo('Modules\Master\Entities\User','user_id','id');
     }
 
-    public function inchargedata()
+    public function dataincharge()
     {
         return $this->belongsTo('Modules\Master\Entities\User','incharge','id');
     }

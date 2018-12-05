@@ -21,4 +21,5 @@ Route::prefix('purchase')->group(function() {
     Route::get('/{id}/edit', 'PurchaseController@purchaseedit');
     Route::patch('/{id}', 'PurchaseController@purchaseupdate');
     Route::get('/{id}/print', 'PurchaseController@purchaseprint');
+    Route::delete('/{id}', 'PurchaseController@purchasedelete');
 });

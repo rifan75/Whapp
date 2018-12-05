@@ -123,8 +123,8 @@
 											<label for="country">Country</label>
 											<select name="country" id="country" class="form-control">
 												@foreach($countries as $country)
-												<option value="{{ $country->value }}" id="{{$country->value}}">
-												{{ $country->value }}
+												<option value="{{ $country->name }}" id="{{$country->name}}">
+												{{ $country->name }}
 												</option>
 												@endforeach
 											</select>
@@ -151,11 +151,6 @@
                         @endif
                       </div>
                     </div>
-			              </div>
-										<div class="form-group col-md-12">
-			              	<label for="note" class=" control-label">Note : </label>
-			              	<textarea id="note"  cols="30" rows="2" class="form-control" name="note" value="{{ old('note') }}"></textarea>
-			                <p style="color:red">{{ $errors->first('note') }}</p>
 			              </div>
 										<div class="form-group col-md-12">
 										<input id="submit" type="submit" class="form-control btn btn-primary prod-submit" value="Change Profile">
@@ -238,11 +233,11 @@ $('#profiletable tbody').on( 'click', '#clicktabel', function () {
     $('#birth_date').val(birth_date);
     $('#gender').val(gender);
     $('#address').val(address);
-		$('#city').val(address);
-		$('#state').val(address);
-		$('#country').val(address);
-		$('#country').val(phone);
-		$('#country').val(pos_code);
+		$('#city').val(city);
+		$('#state').val(state);
+		$('#country').val(country);
+		$('#phone').val(phone);
+		$('#pos_code').val(pos_code);
 		$('#image').attr('src', picture);
 		$('#formeditprofile').attr('action', '/user/profile/'+id+'/edit');
 } );

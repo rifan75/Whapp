@@ -4,8 +4,11 @@ namespace Modules\Warehouse\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Awobaz\Compoships\Compoships;
+
 class Product extends Model
 {
+    use Compoships;
     protected $table = "product";
 
     protected $casts = [

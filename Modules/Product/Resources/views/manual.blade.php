@@ -88,7 +88,7 @@ var table = $('#producttable').DataTable({
     processing: true,
     serverSide: true,
     lengthChange: false,
-    pageLength: 5,
+    pageLength: 10,
     pagingType: "simple",
     ajax: {"url" : "/product/getunsettleproduct"},
     columns: [
@@ -126,13 +126,13 @@ $('#producttable tbody').on('click', 'td.details-control', function () {
 var template1 = Handlebars.compile($("#detailsinventory-template").html());
 var tableinventory = $('#inventorytable').DataTable({
     processing: true,
-    pageLength: 5,
+    pageLength: 10,
     dom: 'Bfrtip',
     buttons: ['csv', 'excel', 'pdf', 'print'],
     ajax: {"url" : "/product/getinventorymanual"},
     columns: [
 				{"className":'details-control',"orderable":false,"searchable":false,"data":null,"defaultContent": ''},
-        {data:0, width: '7px'},{data: 1, visible: false},{data: 2},{data: 3},
+        {data:0, width: '7px'},{data: 1, visible: false , orderable: false},{data: 2},{data: 3},
 				{data:4, className: 'dt-center'},{data:5, className: 'dt-center'},{data:8, className: 'dt-right'},{data: 7, className: 'dt-center'}
     ],
         order: [1, 'asc'],

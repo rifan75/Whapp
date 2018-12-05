@@ -60,26 +60,28 @@ class PurchaseController extends Controller
           $row[] = $purchase->user->name;
           if($purchase->send_date){
             $row[] = $purchase->send_date->format('d-M-Y');
+            $row[] = "<a href='/purchase/".$hashids->encode($purchase->id)."/print' target='_blank'><i class='fa fa-download'></i></a>
+                          &nbsp;&nbsp;&nbsp;
+                        <a href='#' onclick='deleteForm(\"".$hashids->encode($purchase->id)."\")' type='submit'><i class='fa fa-trash'></i></a>
+                        &nbsp;&nbsp;&nbsp;<br>
+                        Purchase Completed
+                        ";
           }else{
             $row[] = "Not Send Yet";
+            $row[] = "<a href='/purchase/".$hashids->encode($purchase->id)."/print' target='_blank'><i class='fa fa-download'></i></a>
+                                        &nbsp;&nbsp;&nbsp;
+                          <a href='/purchase/".$hashids->encode($purchase->id)."/edit'><i class='fa fa-pencil-square-o'></i></a>
+                          &nbsp;&nbsp;&nbsp;
+                        <a href='#' onclick='deleteForm(\"".$hashids->encode($purchase->id)."\")' type='submit'><i class='fa fa-trash'></i></a>";
           }
-          $row[] = $purchase->payment;
-          if ($purchase->total-$purchase->payment==0){
-            $row[] = "Lunas";
-          }else{
-            $row[] = number_format($purchase->total-$purchase->payment);
-          }
+          $row[] = number_format($purchase->total);
           if(count($purchase->warehouse)==0){
             $row[] = "No Warehouse/ Deleted";
           }else{
             $row[] = $purchase->warehouse->name;
           }
           $row[] = $purchase->imageinvoice_path;
-          $row[] = "<a href='/purchase/".$hashids->encode($purchase->id)."/print' target='_blank'><i class='fa fa-download'></i></a>
-                                      &nbsp;&nbsp;&nbsp;
-                        <a href='/purchase/".$hashids->encode($purchase->id)."/edit'><i class='fa fa-pencil-square-o'></i></a>
-                        &nbsp;&nbsp;&nbsp;
-                      <a href='#' onclick='deleteForm(".$hashids->encode($purchase->id).")' type='submit'><i class='fa fa-trash'></i></a>";
+
           foreach ($purchase->purchasedetail as $detail) {
 
             $rowdetail['product'][] = $detail->product->name;
@@ -94,7 +96,7 @@ class PurchaseController extends Controller
           $row['measure'] = $rowdetail['measure'];
           $row['price'] = $rowdetail['price'];
           $row['subtotal'] = $rowdetail['subtotal'];
-        //  $row[] = $purchase->purchasedetail->measure;
+
           $data[] = $row;
         }
 

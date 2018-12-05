@@ -214,9 +214,9 @@ function editForm(id){
 //Menghapus data
 function deleteForm(id) {
     swal({
-      title: 'Are You Sure ?',
+      title: "Are You Sure ?",
       text: "Erased data, cannot be back",
-      type: 'warning',
+      type: "warning",
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',

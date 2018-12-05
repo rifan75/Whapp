@@ -1,10 +1,12 @@
-@extends('app')
+@extends('adminlte::page')
+
+@section('title', 'WApp|Warehouse')
 
 {{-- page level styles --}}
-@section('header_styles')
+@section('css')
 <link rel="stylesheet" href="/css/bootstrap-datetimepicker.css">
 <style>
-.box-header {background-color: #F89A14;}
+.box-header {background-color: #222d32;}
 .box-title {float: left;display: inline-block;font-size: 18px;line-height: 18px;font-weight: 400;margin: 0;
 	          padding: 0;margin-bottom: 8px;color: #fff
           }
@@ -12,37 +14,27 @@
 @stop
 
 @section('content')
-<section class="content-header">
-    <!--section starts-->
-<h1>{{$gudang->warehouse_name}}<small>&nbsp;<span id="waktu"></span></small></h1>
-<ol class="breadcrumb">
-    <li><a href="/"><i class="fa fa-dashboard"></i>Dashboard</a></li>
-    <li class="active"><a href="#">{{$gudang->warehouse_name}}</a></li>
-</ol>
-</section>
-
 <section class="content">
   <div class="row">
     <div class="col-md-8">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">Barang & Barang Siap Jual dalam Perjalanan</h3>
+          <h3 class="box-title">Delivery on The Way</h3>
         </div>
-        <!-- /.box-header -->
         <div class="box-body">
 					<form method="post" id="formsatuan">
 						<meta id="token" name="token" content="{{ csrf_token() }}">
-						<input id="idtab" type="hidden" value="{{$gudang->id}}">
-          <table id="sediabarangtable" class="table table-bordered table-hover">
+						<input id="idtab" type="hidden" value="{{$warehouse->hashid}}">
+          <table id="accepttable" class="table table-bordered table-hover">
             <thead>
             <tr>
 							<th ></th>
               <th style="text-align:center">No</th>
               <th style="text-align:center">Id</th>
-							<th style="text-align:center">Kode Order/ No Surat</th>
-              <th style="text-align:center">Supplier/ Asal</th>
-              <th style="text-align:center">Tgl Order/ Tgl Surat</th>
-              <th style="text-align:center">Aksi</th>
+							<th style="text-align:center">Order Code/ Letter No</th>
+              <th style="text-align:center">Supplier/ From</th>
+              <th style="text-align:center">Order/ Letter Date</th>
+              <th style="text-align:center">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -50,40 +42,36 @@
           </table>
 				</form>
         </div>
-            <!-- /.box-body -->
       </div>
-	<!-- /.box -->
 	  </div>
     <div class="col-md-4">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title" id="judulsatuan">Terima Barang & Barang Siap Jual</h3>
+          <h3 class="box-title" id="judulsatuan">Accepting Items</h3>
         </div>
-        <!-- /.box-header -->
         <div class="box-body">
           <div class="container-fluid add-product" id="tableform">
-							<form id="terimaform" action="" method="post"  enctype="multipart/form-data" data-toggle="validator">
+							<form id="acceptform" action="" method="post"  enctype="multipart/form-data" data-toggle="validator">
 										<input  type="hidden" name="_method" value="PATCH">
-										<input  type="hidden" name="gudang" value="{{$gudang->id}}">
-										<input  type="hidden" name="lokasi" value="{{$gudang->warehouse_code}}">
+										<input  type="hidden" name="warehouse" value="{{$warehouse->hashid}}">
+										<input  type="hidden" name="lokasi" value="{{$warehouse->code}}">
 										<input id="r" type="hidden" name="r">
-										<input id="jenis" type="hidden" name="jenis">
 										 {{csrf_field()}}
 											<div class="row" id="rowinfo">
 												<div class="form-group col-md-6">
-													<label id="kodeorder" for="invoice_id" class=" control-label">Kode Order : </label>
+													<label id="kodeorder" for="invoice_id" class=" control-label">Order Code : </label>
 													<input id="invoice_id" type="text" class="form-control" name="invoice_id" readonly>
 												</div>
 												<div class="form-group col-md-6">
-													<label id="tanggalorder" for="order_date" class=" control-label">Tanggal Order : </label>
+													<label id="tanggalorder" for="order_date" class=" control-label">Order Date : </label>
 													<input id="order_date" type="text" class="form-control" name="order_date" readonly>
 												</div>
 											</div>
 											<div  id="rowtable">
 											<table class="table table-border table-hover" id="infoform">
 										 		<thead>
-												<th style="text-align:center; width:5px">No</th><th style="text-align:center">Produk</th><th style="text-align:center">Jumlah</th>
-												<th style="text-align:center">Satuan</th>
+												<th style="text-align:center; width:5px">No</th><th style="text-align:center">Product</th><th style="text-align:center">Qty</th>
+												<th style="text-align:center">Measure</th>
 										 		</thead>
 												<tbody></tbody>
 											</table>
@@ -91,7 +79,7 @@
 											<div class="row" id="rowasal">
 												<div class="form-group col-md-12" >
 													<div class="form-group">
-														<label for="send_date" class="control-label">Asal</label>
+														<label for="from" class="control-label">From</label>
 														<input id="from" type="text" class="form-control" name="from" readonly>
 													</div>
 												</div>
@@ -99,7 +87,7 @@
 											<div class="row" id="rowtanggal">
 												<div class="form-group col-md-12" >
 													<div class="form-group">
-														<label for="send_date" class="control-label">Tanggal Terima</label>
+														<label for="accepting_date" class="control-label">Accepting Date</label>
 														<div class="input-group date">
 																<div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
 																<input type="text" class="form-control"  name="send_date" id="datetimepicker1" readonly required/>
@@ -109,60 +97,56 @@
 											</div>
 											<div class="row" id="rowsubmit">
 												<div class="form-group col-md-12">
-														 <input id="submit" type="submit" class="form-control btn btn-primary prod-submit" value="Terima Barang">
+														 <input id="submit" type="submit" class="form-control btn btn-primary prod-submit" value="Submit">
 												</div>
 											</div>
 										</form>
           </div>
         </div>
-        <!-- /.box-body -->
       </div>
-      <!-- /.box -->
    </div>
-  <!-- /.row -->
  </div>
 </section>
-    <!-- /.content -->
 @stop
 
 {{-- page level scripts --}}
-@section('footer_scripts')
+@section('js')
 <script type="text/javascript" src="/js/bootstrap-datetimepicker.js" ></script>
 <script type="text/javascript">
 function format ( d ) {
-    var trs=''; //just a variable to construct
+    var trs='';
     var i=0;
     $.each($(d.product),function(key,value){
         i++;
         trs+='<tr><td style="text-align:center">'+i+'</td><td>'+value+
 				'<input id="product_id" type="hidden" value='+d.idproduct[key]+'>'+
-				'</td><td style="text-align:center">'+d.quantity[key]+'</td><td style="text-align:center">'
+				'</td><td style="text-align:right">'+d.quantity[key]+'</td><td style="text-align:left">'
         +d.measure[key]+'</td></tr>';
     })
     return '<table class="table table-border table-hover">'+
            '<thead>'+
-              '<th style="text-align:center; width:5px">No</th>'+'<th style="text-align:center">Produk</th>'+'<th style="text-align:center">Jumlah</th>'+
-              '<th style="text-align:center">Satuan</th>'+
+              '<th style="text-align:center; width:5px">No</th>'+'<th style="text-align:center">Product</th>'+'<th style="text-align:center">Qty</th>'+
+              '<th style="text-align:center">Measure</th>'+
            '</thead><tbody>'
                + trs +
         '</tbody></table>';
 }
 var idtab = $('#idtab').val();
-var table = $('#sediabarangtable').DataTable({
+var table = $('#accepttable').DataTable({
     processing: true,
     serverSide: true,
-    pageLength: 3,
+    pageLength: 5,
     dom: 'Bfrtip',
     buttons: ['csv', 'excel', 'pdf', 'print'],
-    ajax: {"url" : "/sedia/getsedia/"+idtab},
+    ajax: {"url" : "/warehouse/"+idtab+"/delivery"},
     columns: [
 			  {"className":'details-control',"orderable":false,"searchable":false,"data":null,"defaultContent": ''},
-        {data:0, width: '7px'},{data: 1, visible: false},{data: 2},{data: 3},
+        {data:0, orderable: false},{data: 1, visible: false},{data: 2},{data: 3},
 				{data:4, className: 'dt-center'},{data: 5, className: 'dt-center'}
     ],
-        order: [1, 'asc'],
+        order: [0, 'asc'],
 });
-$('#sediabarangtable tbody').on('click', 'td.details-control', function () {
+$('#accepttable tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
 
@@ -177,8 +161,8 @@ $('#sediabarangtable tbody').on('click', 'td.details-control', function () {
           tr.addClass('shown');
         }
     });
-// Showing add product Form
-$('#sediabarangtable tbody').on( 'click', '#clickterima', function () {
+
+$('#accepttable tbody').on( 'click', '#clickterima', function () {
     $('#infoform').remove();
 		var t = table.row($(this).closest('tr')).data();
 		var id = table.row($(this).closest('tr')).data()[1];
@@ -186,18 +170,20 @@ $('#sediabarangtable tbody').on( 'click', '#clickterima', function () {
 		var orderdate = table.row($(this).closest('tr')).data()[4];
 		var from = table.row($(this).closest('tr')).data()[3];
 		var r = table.row($(this).closest('tr')).data()[6];
-		var jenis = table.row($(this).closest('tr')).data()['jenis'][0];
-		var trs=''; //just a variable to construct
+		var trs='';
 		var i=0;
 		if(r==2){
-			$('#kodeorder').text("No Surat");
-			$('#tanggalorder').text("Tanggal Surat");
+			$('#kodeorder').text("Letter No");
+			$('#tanggalorder').text("Letter Date");
+			$('#r').val(r);
+		}else{
+			$('#kodeorder').text("Order Code");
+			$('#tanggalorder').text("Order Date");
 			$('#r').val(r);
 		}
 		$('#invoice_id').val(invoiceid);
 		$('#order_date').val(orderdate);
 		$('#from').val(from);
-		$('#jenis').val(jenis);
 
 		$.each($(t.product),function(key,value){
 				i++;
@@ -219,12 +205,12 @@ $('#sediabarangtable tbody').on( 'click', '#clickterima', function () {
 							'<tbody>'+ trs +'</tbody>'+
 						'</table>');
 
-		$('#terimaform').attr('action', '/terimabarang/'+id);
+		$('#acceptform').attr('action', '/warehouse/accept/'+id);
 		$('#datetimepicker1').removeAttr('readonly');
 
 });
 
-$('#datetimepicker1').datetimepicker({format:'DD-MM-YYYY'});
+$('#datetimepicker1').datetimepicker({format:'DD-MMM-YYYY'});
 </script>
 @include('flash')
 @stop

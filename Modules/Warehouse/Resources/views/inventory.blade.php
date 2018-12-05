@@ -83,10 +83,10 @@ function detailForm(id,name){
 	    pageLength: 5,
 	    ajax: {"url" : "/warehouse/"+id+"/show/"+idtab},
 	    columns: [
-	        {data:0, width: '7px'},{data: 1, visible: false},{data: 7},{data: 4, className: 'dt-right'},
+	        {data:0, width: '7px', orderable:false},{data: 1, visible: false},{data: 7},{data: 4, className: 'dt-right'},
 					{data:5},{data: 9, className: 'dt-right'},{data: 8},{data: 6}
 	    ],
-	        order: [0, 'desc'],
+	        order: [1, 'desc'],
 	});
 	$('#detailtitle').text(name);
 }

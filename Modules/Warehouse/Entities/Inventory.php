@@ -11,7 +11,7 @@ class Inventory extends Model
     use SoftDeletes;
 
     protected $table = "inventory";
-    protected $appends = ['hashproduct'];
+    protected $appends = ['hashproduct','hashwh'];
     /**
      * The attributes that should be mutated to dates.
      *
@@ -41,6 +41,12 @@ class Inventory extends Model
         $hash = config('app.hash_key');
         $hashids = new Hashids($hash,20);
         return $hashids->encode($this->attributes['id_product']);
+    }
+    public function getHashwhAttribute()
+    {
+        $hash = config('app.hash_key');
+        $hashids = new Hashids($hash,20);
+        return $hashids->encode($this->attributes['warehouse']);
     }
     public function user()
     {

@@ -54,13 +54,13 @@ class WarehouseController extends Controller
               '<br>'.$warehouse->country.'-'.$warehouse->pos_code.
               '<br> Email : '.$warehouse->email.
               '<br> Phone : '.$warehouse->phone.
-              '<br> Incharge : '.$warehouse->inchargedata->name;
+              '<br> Incharge : '.$warehouse->dataincharge['name'];
             }else{
               $row[] = '';
             }
             $row[] = $warehouse->user->name;
             $row[] = $warehouse->note;
-            if($count == 1){
+            if($warehouse->code == "WH1"){
               $row[] = "<a href='#' onclick='editForm(\"".$hashids->encode($warehouse->id)."\")'><i class='fa fa-pencil-square-o' title='edit'></i></a>";
             }else{
               $row[] = "<a href='#' onclick='editForm(\"".$hashids->encode($warehouse->id)."\")'><i class='fa fa-pencil-square-o' title='edit'></i></a>

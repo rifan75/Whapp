@@ -13,18 +13,13 @@ class ProductTableSeeder extends Seeder
     public function run()
     {
         DB::table('type')->insert(array(
-            [
-            'name' => 'Beginning Balance',
-            ],
-            [
-            'name' => 'Subtraction-(exp : missing item, broken item, etc)',
-            ],
-            [
-            'name' => 'Added-(exp : gift, retur, etc)',
-            ],
-            [
-            'name' => 'Adjusting - Stock Opname',
-            ],
+            ['name' => 'Beginning Balance',],
+            ['name' => 'Subtraction-(exp : missing item, broken item, etc)',],
+            ['name' => 'Added-(exp : gift, retur, etc)',],
+            ['name' => 'Adjusting - Stock Opname',],
+            ['name' => 'Send Items Out',],
+            ['name' => 'Accepting Items In',],
+            ['name' => 'Purchasing',],
         ));
     }
 }

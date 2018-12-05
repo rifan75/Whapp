@@ -135,29 +135,80 @@ return [
                   'text' => 'Brand',
                   'url'  => 'master/brand',
                   'can'  => 'isAdmin',
-                  'icon' => 'file',
+                  'icon' => 'caret-right',
               ],
 
               [
                   'text' => 'Measure',
                   'url'  => 'master/measure',
                   'can'  => 'isAdmin',
-                  'icon' => 'lock',
+                  'icon' => 'caret-right',
               ],
               [
                   'text' => 'Supplier',
                   'url'  => 'master/supplier',
-                  'icon' => 'user',
+                  'icon' => 'caret-right',
               ],
               [
                   'text' => 'Warehouse Data',
                   'url'  => 'master/warehouse',
                   'can'  => 'isAdmin',
-                  'icon' => 'home',
+                  'icon' => 'caret-right',
               ],
             ],
         ],
-
+        [
+            'text' => 'Delete Data',
+            'icon' => 'trash',
+            'can'  => 'isAdmin',
+            'submenu' => [
+                [
+                    'text' => 'User',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/user',
+                ],
+                [
+                    'text' => 'Brand',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/brand',
+                ],
+                [
+                    'text' => 'Measure',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/measure',
+                ],
+                [
+                    'text' => 'Supplier',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/supplier',
+                ],
+                [
+                    'text' => 'Warehouse Data',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/warehouse',
+                ],
+                [
+                    'text' => 'Product',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/product',
+                ],
+                [
+                    'text' => 'Purchase',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/purchase',
+                ],
+                [
+                    'text' => 'Send',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/send',
+                ],
+                [
+                    'text' => 'Inventory',
+                    'icon' => 'caret-right',
+                    'url'  => '/delete/inventory',
+                ],
+            ],
+        ],
 
         'APPLICATION',
         [
@@ -178,7 +229,7 @@ return [
         ],
         [
             'text' => 'Product',
-            'icon' => 'lock',
+            'icon' => 'product-hunt',
             'submenu' => [
                 [
                     'text' => 'Product List',
@@ -199,7 +250,7 @@ return [
         ],
         [
             'text' => 'Purchase',
-            'icon' => 'lock',
+            'icon' => 'money',
             'submenu' => [
                 [
                     'text' => 'Purchase List',
@@ -215,8 +266,8 @@ return [
         ],
         [
             'text' => 'Stock Opname',
-            'url'  => 'admin/settings',
-            'icon' => 'lock',
+            'url'  => '/stockopname',
+            'icon' => 'sticky-note',
         ],
 
 
