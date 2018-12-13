@@ -11,15 +11,13 @@
 |
 */
 
-Route::prefix('purchase')->group(function() {
-    Route::get('/', 'PurchaseController@index');
-    Route::get('/getpurchase', 'PurchaseController@getPurchase');
-    Route::get('/order', 'PurchaseController@purchaseorder');
-    Route::get('/getproduct', 'PurchaseController@getProduct');
-    Route::get('/gen', 'PurchaseController@purchasegen');
-    Route::post('/', 'PurchaseController@purchasestore');
-    Route::get('/{id}/edit', 'PurchaseController@purchaseedit');
-    Route::patch('/{id}', 'PurchaseController@purchaseupdate');
-    Route::get('/{id}/print', 'PurchaseController@purchaseprint');
-    Route::delete('/{id}', 'PurchaseController@purchasedelete');
-});
+Route::get('purchase', 'PurchaseController@index');
+Route::get('purchase/getpurchase', 'PurchaseController@getPurchase');
+Route::get('purchase/order', 'PurchaseController@purchaseorder');
+Route::get('purchase/getproduct', 'PurchaseController@getProduct');
+Route::get('purchase/gen', 'PurchaseController@purchasegen');
+Route::post('purchase', 'PurchaseController@purchasestore');
+Route::get('purchase/{id}/edit', 'PurchaseController@purchaseedit');
+Route::patch('purchase/{id}', 'PurchaseController@purchaseupdate');
+Route::get('purchase/{id}/print', 'PurchaseController@purchaseprint');
+Route::delete('purchase/{id}', 'PurchaseController@purchasedelete');

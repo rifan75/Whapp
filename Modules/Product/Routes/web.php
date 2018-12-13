@@ -11,32 +11,30 @@
 |
 */
 
-Route::prefix('product')->group(function() {
-    /**
-    * Product Routes
-    */
-    Route::get('/', 'ProductController@index');
-    Route::get('/getproduct', 'ProductController@getProduct');
-    Route::post('/', 'ProductController@productstore');
-    Route::get('/{id}/edit', 'ProductController@productedit');
-    Route::patch('/{id}', 'ProductController@productupdate');
-    Route::delete('/{id}', 'ProductController@productdelete');
-    Route::get('/productgen/{string}', 'ProductController@productgen');
+/**
+* Product Routes
+*/
+Route::get('product', 'ProductController@index');
+Route::get('product/getproduct', 'ProductController@getProduct');
+Route::post('product', 'ProductController@productstore');
+Route::get('product/{id}/edit', 'ProductController@productedit');
+Route::patch('product/{id}', 'ProductController@productupdate');
+Route::delete('product/{id}', 'ProductController@productdelete');
+Route::get('product/productgen/{string}', 'ProductController@productgen');
 
-    /**
-    * Product Image Routes
-    */
-    Route::get('/image', 'ProductimageController@index');
-    Route::get('/getproductimage', 'ProductimageController@getProduct');
-    Route::patch('/{id}/editimage', 'ProductimageController@productimageedit');
-    /**
-    * Beginning Balance Routes
-    */
-    Route::get('/manual', 'ManualController@index');
-    Route::get('/getunsettleproduct', 'ManualController@getProduct');
-    Route::get('/getinventorymanual', 'ManualController@getInventoryManual');
-    Route::post('/inputmanual', 'ManualController@inputManual');
-    Route::get('/manual/{id}/edit', 'ManualController@manualedit');
-    Route::patch('/manualedit/{id}', 'ManualController@manualupdate');
-    Route::delete('/manual/{id}', 'ManualController@manualdelete');
-});
+/**
+* Product Image Routes
+*/
+Route::get('product/image', 'ProductimageController@index');
+Route::get('product/getproductimage', 'ProductimageController@getProduct');
+Route::patch('product/{id}/editimage', 'ProductimageController@productimageedit');
+/**
+* Beginning Balance Routes
+*/
+Route::get('product/manual', 'ManualController@index');
+Route::get('product/getunsettleproduct', 'ManualController@getProduct');
+Route::get('product/getinventorymanual', 'ManualController@getInventoryManual');
+Route::post('product/inputmanual', 'ManualController@inputManual');
+Route::get('product/manual/{id}/edit', 'ManualController@manualedit');
+Route::patch('product/manualedit/{id}', 'ManualController@manualupdate');
+Route::delete('product/manual/{id}', 'ManualController@manualdelete');

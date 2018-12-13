@@ -10,17 +10,14 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::prefix('delete')->group(function() {
-    Route::get('/user', 'DeleteController@user');
-    Route::get('/brand', 'DeleteController@brand');
-    Route::get('/measure', 'DeleteController@measure');
-    Route::get('/supplier', 'DeleteController@supplier');
-    Route::get('/warehouse', 'DeleteController@warehouse');
-    Route::get('/product', 'DeleteController@product');
-    Route::get('/purchase', 'DeleteController@purchase');
-    Route::get('/send', 'DeleteController@send');
-    Route::get('/inventory', 'DeleteController@inventory');
-    Route::post('/{id}/restore/{model}', 'DeleteController@restore');
-    Route::delete('/{id}/{model}', 'DeleteController@delete');
-});
+Route::get('delete/user', 'DeleteController@user');
+Route::get('delete/brand', 'DeleteController@brand');
+Route::get('delete/measure', 'DeleteController@measure');
+Route::get('delete/supplier', 'DeleteController@supplier');
+Route::get('delete/warehouse', 'DeleteController@warehouse');
+Route::get('delete/product', 'DeleteController@product');
+Route::get('delete/purchase', 'DeleteController@purchase');
+Route::get('delete/send', 'DeleteController@send');
+Route::get('delete/inventory', 'DeleteController@inventory');
+Route::post('delete/{id}/restore/{model}', 'DeleteController@restore');
+Route::delete('delete/{id}/{model}', 'DeleteController@delete');

@@ -5,12 +5,6 @@
 {{-- page level styles --}}
 @section('css')
 <link rel="stylesheet" href="/css/bootstrap-datetimepicker.css">
-<style>
-.box-header {background-color: #F89A14;}
-.box-title {float: left;display: inline-block;font-size: 18px;line-height: 18px;font-weight: 400;margin: 0;
-	          padding: 0;margin-bottom: 8px;color: #fff
-          }
-</style>
 @stop
 
 @section('content')

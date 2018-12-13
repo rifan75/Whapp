@@ -11,33 +11,30 @@
 |
 */
 
-Route::prefix('user')->group(function() {
+/**
+ * Registration Routes
+ */
+Route::get('user/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('user/register', 'Auth\RegisterController@register');
 
-      /**
-       * Registration Routes
-       */
-      Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-      Route::post('register', 'Auth\RegisterController@register');
+/**
+ * User Routes
+ */
+Route::get('user/getuser', 'UserController@getUser');
+Route::get('user/{id}/edit', 'UserController@useredit');
+Route::patch('user/useract/{id}/{act}', 'UserController@useractupdate');
+Route::patch('user/{id}', 'UserController@userupdate');
+Route::delete('user/{id}', 'UserController@userdelete');
 
-      /**
-       * User Routes
-       */
-      Route::get('/getuser', 'UserController@getUser');
-      Route::get('/{id}/edit', 'UserController@useredit');
-      Route::patch('/useract/{id}/{act}', 'UserController@useractupdate');
-      Route::patch('/{id}', 'UserController@userupdate');
-      Route::delete('/{id}', 'UserController@userdelete');
-
-      /**
-       * Profile Routes
-       */
-      Route::get('/profile', 'ProfileController@index');
-      Route::get('/profileedit', 'ProfileController@edit');
-      Route::get('/getprofile', 'ProfileController@getProfile');
-      Route::patch('/profile/{id}/edit', 'ProfileController@profileupdate');
-      Route::get('/changepasswd', 'UserController@changepasswd');
-      Route::patch('/changepasswd/{id}', 'UserController@updatepasswd');
-});
+/**
+ * Profile Routes
+ */
+Route::get('user/profile', 'ProfileController@index');
+Route::get('user/profileedit', 'ProfileController@edit');
+Route::get('user/getprofile', 'ProfileController@getProfile');
+Route::patch('user/profile/{id}/edit', 'ProfileController@profileupdate');
+Route::get('user/changepasswd', 'UserController@changepasswd');
+Route::patch('user/changepasswd/{id}', 'UserController@updatepasswd');
 
 // Authentication Routes...
 Route::get('/', 'Auth\LoginController@showLoginForm')->name('login');

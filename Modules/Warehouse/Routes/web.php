@@ -11,33 +11,31 @@
 |
 */
 
-Route::prefix('warehouse')->group(function() {
-    /**
-     * Inventory Routes
-     */
-    Route::get('/{id}', 'InventoryController@index');
-    Route::get('/getinventory/{id}', 'InventoryController@getinventory');
-    Route::get('/{id}/show/{idtab}', 'InventoryController@getDetailInventory');
+/**
+ * Inventory Routes
+ */
+Route::get('warehouse/{id}', 'InventoryController@index');
+Route::get('warehouse/getinventory/{id}', 'InventoryController@getinventory');
+Route::get('warehouse/{id}/show/{idtab}', 'InventoryController@getDetailInventory');
 
-    /**
-     * Send Routes
-     */
-   Route::get('/{id}/send', 'SendController@index');
-   Route::get('/getsend/{id}', 'SendController@getSend');
-   Route::get('/addsend/{id}', 'SendController@AddSend');
-   Route::get('/sendinventory/{id}', 'SendController@getInventory');
-   Route::get('/sendgen/{id}', 'SendController@Sendgen');
-   Route::post('/send', 'SendController@Sendstore');
-   Route::get('/{id}/send_edit', 'SendController@Sendedit');
-   Route::patch('/send_edit/{id}', 'SendController@Sendupdate');
-   Route::delete('/send/{id}', 'SendController@Senddelete');
-   /**
-    * Accept Routes
-    */
-    Route::get('/{id}/accept', 'AcceptController@index');
-    Route::get('/{id}/delivery', 'AcceptController@getDelivery');
-    Route::patch('/accept/{id}', 'AcceptController@Accept');
-});
+/**
+ * Send Routes
+ */
+Route::get('warehouse/{id}/send', 'SendController@index');
+Route::get('warehouse/getsend/{id}', 'SendController@getSend');
+Route::get('warehouse/addsend/{id}', 'SendController@AddSend');
+Route::get('warehouse/sendinventory/{id}', 'SendController@getInventory');
+Route::get('warehouse/sendgen/{id}', 'SendController@Sendgen');
+Route::post('warehouse/send', 'SendController@Sendstore');
+Route::get('warehouse/{id}/send_edit', 'SendController@Sendedit');
+Route::patch('warehouse/send_edit/{id}', 'SendController@Sendupdate');
+Route::delete('warehouse/send/{id}', 'SendController@Senddelete');
+/**
+* Accept Routes
+*/
+Route::get('warehouse/{id}/accept', 'AcceptController@index');
+Route::get('warehouse/{id}/delivery', 'AcceptController@getDelivery');
+Route::patch('warehouse/accept/{id}', 'AcceptController@Accept');
 
 /**
  * Stockopname Routes
