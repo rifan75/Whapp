@@ -160,7 +160,7 @@ return [
         [
             'text' => 'Delete Data',
             'icon' => 'trash',
-            'can'  => 'isAdmin',
+            'can'  => 'isSuperAdmin',
             'submenu' => [
                 [
                     'text' => 'User',

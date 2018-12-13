@@ -26,19 +26,32 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('isSuperAdmin', function ($user) {
-          if ($user->level == '1') {
-                return true;
-            }
-            return false;
+          if ($user->level == '1'  )
+          {
+            return true;
+          }
+          return false;
         });
         Gate::define('isAdmin', function ($user) {
-          return $user->level == '2';
+          if ($user->level == '1' || $user->level == '2')
+          {
+            return true;
+          }
+          return false;
         });
         Gate::define('isManager', function ($user) {
-          return $user->level == '3';
+          if ($user->level == '1' || $user->level == '2' || $user->level == '3')
+          {
+            return true;
+          }
+          return false;
         });
         Gate::define('isStaff', function ($user) {
-          return $user->level == '4';
+          if ($user->level == '1' || $user->level == '2' || $user->level == '3' || $user->level == '4')
+          {
+            return true;
+          }
+          return false;
         });
 
     }
