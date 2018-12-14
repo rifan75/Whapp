@@ -4,3 +4,4 @@ cd /var/www/html/warehouse-demo/storage/logs
 sudo rm -rf *
 cd /var/www/html/warehouse-demo/storage/framework/views
 sudo rm -rf *
+cd ~
