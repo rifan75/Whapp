@@ -125,6 +125,8 @@ return [
 
     'url_images' => env('URL_IMAGES', ''),
 
+    'ssl'=> env('ENFORCE_SSL',true),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

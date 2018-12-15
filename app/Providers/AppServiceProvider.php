@@ -17,6 +17,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        if(config('app.ssl')) {
+                	    $url->forceScheme('https');
+          }
         Validator::extend('oldpassword', function ($attribute, $value, $parameters, $validator) {
           return Hash::check($value, current($parameters));
         });
