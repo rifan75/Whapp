@@ -19,6 +19,7 @@ use DateTime;
 use DataTables;
 use Auth;
 use DB;
+use Gate;
 
 class OpnameController extends Controller
 {
@@ -29,6 +30,10 @@ class OpnameController extends Controller
 
       public function index()
       {
+          if (!Gate::allows('isManager'))
+          {
+             return response()->view('error.404', [], 404);
+          }
           $warehouses = Warehouse::all();
           return view('warehouse::stockopname.stockopname',compact('warehouses'));
       }
@@ -36,6 +41,10 @@ class OpnameController extends Controller
 
       public function getOpname()
       {
+          if (!Gate::allows('isManager'))
+          {
+             return response()->view('error.404', [], 404);
+          }
           $opnames = Stockopname::all();
           $no = 0;
           $data = array();

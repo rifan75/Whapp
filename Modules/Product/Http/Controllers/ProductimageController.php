@@ -13,6 +13,7 @@ use DataTables;
 use Auth;
 use File;
 use DB;
+use Gate;
 
 class ProductimageController extends Controller
 {
@@ -24,6 +25,10 @@ class ProductimageController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('isStaff'))
+        {
+           return response()->view('error.404', [], 404);
+        }
         $url = config('app.url_images');
         $id = "temporary_id";
 	      return view('product::productimage', compact('url','id'));
@@ -31,6 +36,10 @@ class ProductimageController extends Controller
 
     public function getProduct()
     {
+        if (!Gate::allows('isStaff'))
+        {
+           return response()->view('error.404', [], 404);
+        }
         $products = Product::all();
         $hash = config('app.hash_key');
         $hashids = new Hashids($hash,20);

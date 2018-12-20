@@ -23,6 +23,7 @@ use PDF;
 use File;
 use DB;
 use Carbon\Carbon;
+use Gate;
 
 class SendController extends Controller
 {
@@ -34,6 +35,10 @@ class SendController extends Controller
 
     public function index($id)
     {
+        if (!Gate::allows('isStaff'))
+        {
+           return response()->view('error.404', [], 404);
+        }
         $hash = config('app.hash_key');
         $hashids = new Hashids($hash,20);
         $ids=$hashids->decode($id)[0];
@@ -44,6 +49,10 @@ class SendController extends Controller
 
     public function getSend($id)
     {
+        if (!Gate::allows('isStaff'))
+        {
+           return response()->view('error.404', [], 404);
+        }
         $sends = Send::where('from',$id)->get();
         $no = 0;
         $data = array();

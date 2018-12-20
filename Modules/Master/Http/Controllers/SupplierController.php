@@ -11,6 +11,7 @@ use Hashids\Hashids;
 use Modules\Master\Entities\User;
 use DataTables;
 use Auth;
+use Gate;
 
 class SupplierController extends Controller
 {
@@ -21,13 +22,20 @@ class SupplierController extends Controller
 
       public function index()
       {
-
+          if (!Gate::allows('isStaff'))
+          {
+             return response()->view('error.404', [], 404);
+          }
           $countries=Country::all();
           return view('master::supplier',compact('countries'));
       }
 
       public function getSupplier()
       {
+          if (!Gate::allows('isStaff'))
+          {
+             return response()->view('error.404', [], 404);
+          }
           $suppliers = Supplier::all();
           $hash = config('app.hash_key');
           $hashids = new Hashids($hash,20);

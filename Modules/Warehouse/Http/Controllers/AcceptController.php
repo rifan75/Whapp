@@ -18,6 +18,7 @@ use DateTime;
 use DataTables;
 use Auth;
 use Carbon\Carbon;
+use Gate;
 
 class AcceptController extends Controller
 {
@@ -28,6 +29,10 @@ class AcceptController extends Controller
 
       public function index($id)
       {
+          if (!Gate::allows('isStaff'))
+          {
+             return response()->view('error.404', [], 404);
+          }
           $hash = config('app.hash_key');
           $hashids = new Hashids($hash,20);
           $ids=$hashids->decode($id)[0];
@@ -38,6 +43,10 @@ class AcceptController extends Controller
 
       public function getDelivery($id)
       {
+        if (!Gate::allows('isStaff'))
+        {
+           return response()->view('error.404', [], 404);
+        }
         $hash = config('app.hash_key');
         $hashids = new Hashids($hash,20);
         $ids=$hashids->decode($id)[0];

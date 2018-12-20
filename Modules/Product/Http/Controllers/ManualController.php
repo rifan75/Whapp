@@ -17,6 +17,7 @@ use DateTime;
 use DataTables;
 use Auth;
 use Carbon\Carbon;
+use Gate;
 
 class ManualController extends Controller
 {
@@ -27,6 +28,10 @@ class ManualController extends Controller
 
       public function index()
       {
+          if (!Gate::allows('isManager'))
+          {
+             return response()->view('error.404', [], 404);
+          }
           $warehouses = Warehouse::all();
           $types = Type::all();
           return view('product::manual',compact('warehouses','types'));
@@ -34,6 +39,10 @@ class ManualController extends Controller
 
       public function getProduct()
       {
+        if (!Gate::allows('isManager'))
+        {
+           return response()->view('error.404', [], 404);
+        }
         $products = Product::all();
         $hash = config('app.hash_key');
         $hashids = new Hashids($hash,20);

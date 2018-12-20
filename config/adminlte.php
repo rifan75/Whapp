@@ -148,6 +148,7 @@ return [
                   'text' => 'Supplier',
                   'url'  => 'master/supplier',
                   'icon' => 'caret-right',
+                  'can'  => 'isStaff',
               ],
               [
                   'text' => 'Warehouse Data',
@@ -235,16 +236,19 @@ return [
                     'text' => 'Product List',
                     'icon' => 'caret-right',
                     'url'  => 'product',
+                    'can'  => 'isStaff',
                 ],
                 [
                     'text' => 'Manual Input',
                     'icon' => 'caret-right',
                     'url'  => 'product/manual',
+                    'can'  => 'isManager',
                 ],
                 [
                     'text' => 'Product Image',
                     'icon' => 'caret-right',
                     'url'  => 'product/image',
+                    'can'  => 'isStaff',
                 ],
             ],
         ],
@@ -256,11 +260,13 @@ return [
                     'text' => 'Purchase List',
                     'icon' => 'caret-right',
                     'url'  => 'purchase',
+                    'can'  => 'isStaff',
                 ],
                 [
                     'text' => 'Purchase Order',
                     'icon' => 'caret-right',
                     'url'  => 'purchase/order',
+                    'can'  => 'isStaff',
                 ],
             ],
         ],
@@ -268,6 +274,7 @@ return [
             'text' => 'Stock Opname',
             'url'  => '/stockopname',
             'icon' => 'sticky-note',
+            'can'  => 'isManager',
         ],
 
 

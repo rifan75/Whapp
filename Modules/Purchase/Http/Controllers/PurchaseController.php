@@ -20,6 +20,7 @@ use Auth;
 use PDF;
 use File;
 use DB;
+use Gate;
 
 class PurchaseController extends Controller
 {
@@ -31,11 +32,19 @@ class PurchaseController extends Controller
 
     public function index()
     {
+        if (!Gate::allows('isStaff'))
+        {
+           return response()->view('error.404', [], 404);
+        }
 	      return view('purchase::purchase');
     }
 
     public function getPurchase()
     {
+        if (!Gate::allows('isStaff'))
+        {
+           return response()->view('error.404', [], 404);
+        }
         $purchases = Purchase::all();
         $hash = config('app.hash_key');
         $hashids = new Hashids($hash,20);
