@@ -125,5 +125,4 @@ VI. Plugins
 For demo you can go to : https://warehouse-demo.baihaqie.com, and for documentation : https://warehouse-doc.baihaqie.com
 
 License
-
-The Laravel framework is open-sourced software licensed under the MIT license.
+Warehouse Application (Whapp) open-sourced software licensed under the MIT license.
